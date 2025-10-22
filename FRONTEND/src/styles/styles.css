@@ -1,0 +1,20 @@
+/* Estilos mínimos para layout limpo e fácil manutenção */
+body {
+  background-color: #f8f9fa;
+}
+
+.card {
+  border-radius: 0.5rem;
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.075);
+}
+
+@media (min-width: 992px) {
+  .card-body {
+    padding: 2rem 2rem;
+  }
+}
+
+
