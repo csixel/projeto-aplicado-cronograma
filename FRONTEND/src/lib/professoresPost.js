@@ -19,12 +19,6 @@ async function validarFormularioProfessor() {
     };
     console.log('CPF após remover formatação:', data.cpf); // Debug
 
-    // Validar Informações obrigatórias
-    if (data.nome.length == 0) {
-        alert("Nome não informado");
-        return ;
-    }
-
     // Validar CPF antes de enviar
     const cpfValido = await validarCpf(data.cpf);
     console.log('Resultado da validação:', cpfValido); // Debug
