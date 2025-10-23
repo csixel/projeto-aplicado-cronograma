@@ -1,6 +1,15 @@
 const endPointPostCriarProfessor = "http://localhost:3000/professor/criarProfessor";
 
 async function validarFormularioProfessor() {
+    const formulario = document.getElementById('professores-form');
+    
+    // Verifica a validade de todos os campos
+    if (!formulario.checkValidity()) {
+        // Se há campos inválidos, mostra mensagens de erro
+        formulario.reportValidity();
+        return;
+    }
+
     const data = {
         nome: document.getElementById("nome").value.trim(),
         email: document.getElementById("email").value.trim(),
@@ -9,6 +18,13 @@ async function validarFormularioProfessor() {
         cpf: removerFormatacao(document.getElementById("cpf").value),
     };
     console.log('CPF após remover formatação:', data.cpf); // Debug
+
+    // Validar Informações obrigatórias
+    if (data.nome.length == 0) {
+        alert("Nome não informado");
+        return ;
+    }
+
     // Validar CPF antes de enviar
     const cpfValido = await validarCpf(data.cpf);
     console.log('Resultado da validação:', cpfValido); // Debug
@@ -31,6 +47,8 @@ async function validarCpf(cpf) {
     try {
         if (cpf.trim().length == 0) {
             return { erro: true, mensagem: "CPF não informado" };
+        } else if (cpf.trim().length < 11) {
+            return { erro: true, mensagem: "CPF incompleto" };
         }
 
         const response = await fetch(`http://localhost:3000/professor/buscarProfessorPorCPF/${cpf}`,{

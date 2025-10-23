@@ -17,27 +17,31 @@
               <h1 class="h4 mb-0">Cadastro de Professores</h1>
             </div>
             <div class="card-body">
-              <form novalidate>
+              <form id="professores-form">
                 <div class="mb-3">
                   <label for="nome" class="form-label">Nome</label>
-                  <input type="text" class="form-control" id="nome" name="nome" placeholder="Digite o nome completo" required>
+                  <input type="text" class="form-control" id="nome" name="nome" 
+                    placeholder="Digite o nome completo" required minlength="3" pattern="[A-Za-zÀ-ÿ\s]{3,}" 
+                    title="Por favor, insira pelo menos 3 caracteres (apenas letras e espaços)" />
                 </div>
 
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" name="email" placeholder="exemplo@escola.com" required>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="exemplo@escola.com" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$"
+                    title="Digite um email válido (ex: usuario@exemplo.com.br)" required>
                 </div>
 
                 <div class="mb-3">
                   <label for="disciplina" class="form-label">Disciplina</label>
-                  <input type="text" class="form-control" id="disciplina" name="disciplina" placeholder="Ex.: Matemática" required>
+                  <input type="text" class="form-control" id="disciplina" name="disciplina" placeholder="Ex.: Matemática" minlength="3" required>
                 </div>
 
                 <div class="row g-3">
                   <div class="col-12 col-md-6">
                     <label for="telefone" class="form-label">Telefone</label>
                     <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="(00) 00000-0000"
-                    maxlength="15" oninput="formatarTelefone(this)">
+                      maxlength="15" oninput="formatarTelefone(this)"  pattern="^\(\d{2}\)\s\d{4,5}-\d{4}$"
+                      title="Digite o telefone no formato: (99) 99999-9999">
                   </div>
                   <div class="col-12 col-md-6">
                     <label for="cpf" class="form-label">CPF</label>
