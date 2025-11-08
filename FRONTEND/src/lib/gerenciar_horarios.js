@@ -65,6 +65,30 @@ let turmas = [];
 // Variável para armazenar o horário que será excluído
 let horarioParaExcluir = null;
 
+// URLs das APIs fictícias
+const API_URLS = {
+    EXCLUIR_HORARIO: 'api/horarios/excluir',
+    EDITAR_HORARIO: 'api/horarios/editar',
+    INCLUIR_HORARIO: 'api/horarios/incluir'
+};
+
+// Função para carregar dados da API
+function carregarDadosAPI(url, callback) {
+    $.ajax({
+        url: url,
+        method: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            // Agora a resposta é diretamente o array de dados
+            callback(response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Erro na requisição para ' + url + ':', error);
+            mostrarMensagem('Erro ao carregar dados da API: ' + url, 'Erro');
+        }
+    });
+}
+
 // Função para carregar todos os dados das APIs
 function carregarTodosDados() {
     $('#loading-spinner').show();
@@ -263,12 +287,6 @@ function novoHorario() {
     $('#modalHorario').modal('show');
 }
 
-// Função para encontrar descrição pelo ID
-function encontrarDescricaoPorId(dados, id, idKey, descricaoKey) {
-    const item = $.grep(dados, function(item) { return item[idKey] == id; })[0];
-    return item ? item[descricaoKey] : '';
-}
-
 // Função para editar horário
 function editarHorario(cd_horario) {
     const horario = $.grep(horarios, function(h) { return h.cd_horario === cd_horario; })[0];
@@ -291,6 +309,57 @@ function editarHorario(cd_horario) {
     $('#modalHorario').modal('show');
 }
 
+// Função para chamar API de inclusão de horário
+function incluirHorarioAPI(dados, callback) {
+    // Simulação de chamada à API
+    $.ajax({
+        url: API_URLS.INCLUIR_HORARIO,
+        method: 'POST',
+        dataType: 'json',
+        data: dados,
+        success: function(response) {
+            callback(response.success, response.mensagem || 'Horário incluído com sucesso!');
+        },
+        error: function(xhr, status, error) {
+            callback(false, 'Erro ao incluir horário: ' + error);
+        }
+    });
+}
+
+// Função para chamar API de edição de horário
+function editarHorarioAPI(cd_horario, dados, callback) {
+    // Simulação de chamada à API
+    $.ajax({
+        url: API_URLS.EDITAR_HORARIO,
+        method: 'PUT',
+        dataType: 'json',
+        data: { ...dados, cd_horario: cd_horario },
+        success: function(response) {
+            callback(response.success, response.mensagem || 'Horário editado com sucesso!');
+        },
+        error: function(xhr, status, error) {
+            callback(false, 'Erro ao editar horário: ' + error);
+        }
+    });
+}
+
+// Função para chamar API de exclusão de horário
+function excluirHorarioAPI(cd_horario, callback) {
+    // Simulação de chamada à API
+    $.ajax({
+        url: API_URLS.EXCLUIR_HORARIO,
+        method: 'DELETE',
+        dataType: 'json',
+        data: { cd_horario: cd_horario },
+        success: function(response) {
+            callback(response.success, response.mensagem || 'Horário excluído com sucesso!');
+        },
+        error: function(xhr, status, error) {
+            callback(false, 'Erro ao excluir horário: ' + error);
+        }
+    });
+}
+
 // Função para salvar horário (criar ou atualizar)
 function salvarHorario() {
     if (!validarFormulario()) {
@@ -311,48 +380,36 @@ function salvarHorario() {
         hr_fim: $('#hr_fim').val()
     };
 
-    // Buscar descrições dos relacionamentos
-    const ds_turma = encontrarDescricaoPorId(turmas, dados.cd_turma, 'cd_turma', 'ds_turma');
-    const ds_sala_aula = encontrarDescricaoPorId(salas, dados.cd_sala_aula, 'cd_sala_aula', 'ds_sala_aula');
-    const ds_professor = encontrarDescricaoPorId(professores, dados.cd_professor, 'cd_professor', 'ds_nome');
-    const ds_disciplina = encontrarDescricaoPorId(disciplinas, dados.cd_disciplina, 'cd_disciplina', 'ds_disciplina');
-    const ds_dia_semana = $('#nr_dia_semana option:selected').text();
+    // Mostrar loading
+    $('#btnSalvarHorario').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Salvando...');
 
     if (cd_horario) {
-        // Atualizar horário existente
-        const index = $.inArray(parseInt(cd_horario), $.map(horarios, function(h) { return h.cd_horario; }));
-        if (index !== -1) {
-            horarios[index] = {
-                ...horarios[index],
-                ...dados,
-                ds_turma: ds_turma,
-                ds_sala_aula: ds_sala_aula,
-                ds_professor: ds_professor,
-                ds_disciplina: ds_disciplina,
-                ds_dia_semana: ds_dia_semana
-            };
-        }
+        // Editar horário existente via API
+        editarHorarioAPI(cd_horario, dados, function(sucesso, mensagem) {
+            $('#btnSalvarHorario').prop('disabled', false).html('Salvar');
+            
+            if (sucesso) {
+                carregarTabelaHorarios();
+                $('#modalHorario').modal('hide');
+                mostrarMensagem(mensagem, 'Sucesso');
+            } else {
+                mostrarMensagem(mensagem, 'Erro');
+            }
+        });
     } else {
-        // Criar novo horário
-        const novoId = horarios.length > 0 ? Math.max(...$.map(horarios, function(h) { return h.cd_horario; })) + 1 : 1;
-        
-        const novoHorario = {
-            cd_horario: novoId,
-            ...dados,
-            ds_turma: ds_turma,
-            ds_sala_aula: ds_sala_aula,
-            ds_professor: ds_professor,
-            ds_disciplina: ds_disciplina,
-            ds_dia_semana: ds_dia_semana
-        };
-        
-        horarios.push(novoHorario);
+        // Incluir novo horário via API
+        incluirHorarioAPI(dados, function(sucesso, mensagem) {
+            $('#btnSalvarHorario').prop('disabled', false).html('Salvar');
+            
+            if (sucesso) {
+                carregarTabelaHorarios();
+                $('#modalHorario').modal('hide');
+                mostrarMensagem(mensagem, 'Sucesso');
+            } else {
+                mostrarMensagem(mensagem, 'Erro');
+            }
+        });
     }
-
-    carregarTabelaHorarios();
-    $('#modalHorario').modal('hide');
-    
-    mostrarMensagem('Horário salvo com sucesso!', 'Sucesso');
 }
 
 // Função para preparar exclusão de horário
@@ -371,13 +428,27 @@ function prepararExclusaoHorario(cd_horario) {
 
 // Função para confirmar exclusão de horário
 function confirmarExclusaoHorario() {
-    if (horarioParaExcluir) {
-        horarios = $.grep(horarios, function(h) { return h.cd_horario !== horarioParaExcluir; });
-        carregarTabelaHorarios();
-        $('#modalConfirmacaoExclusao').modal('hide');
-        mostrarMensagem('Horário excluído com sucesso!', 'Sucesso');
+    if (!horarioParaExcluir) return;
+
+    // Mostrar loading
+    $('#btnConfirmarExclusao').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Excluindo...');
+
+    // Chamar API de exclusão
+    excluirHorarioAPI(horarioParaExcluir, function(sucesso, mensagem) {
+        $('#btnConfirmarExclusao').prop('disabled', false).html('Excluir');
+        
+        if (sucesso) {
+            // Remover horário localmente
+            horarios = $.grep(horarios, function(h) { return h.cd_horario !== horarioParaExcluir; });
+            carregarTabelaHorarios();
+            $('#modalConfirmacaoExclusao').modal('hide');
+            mostrarMensagem(mensagem, 'Sucesso');
+        } else {
+            mostrarMensagem(mensagem, 'Erro');
+        }
+        
         horarioParaExcluir = null;
-    }
+    });
 }
 
 // Função para mostrar mensagem em modal
@@ -423,5 +494,15 @@ $(document).ready(function() {
     $('#formHorario .form-control, #formHorario .form-select').on('input change', function() {
         $(this).removeClass('is-invalid');
         $('#' + $(this).attr('id') + '_error').hide();
+    });
+    
+    // Resetar botões quando modal for fechado
+    $('#modalHorario').on('hidden.bs.modal', function() {
+        $('#btnSalvarHorario').prop('disabled', false).html('Salvar');
+    });
+    
+    $('#modalConfirmacaoExclusao').on('hidden.bs.modal', function() {
+        $('#btnConfirmarExclusao').prop('disabled', false).html('Excluir');
+        horarioParaExcluir = null;
     });
 });
