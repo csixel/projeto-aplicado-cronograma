@@ -1,76 +1,41 @@
-// Dados de exemplo (simulando um banco de dados)
-let horarios = [
-    {
-        cd_horario: 1,
-        ds_horario: "Aula de Matemática - Turma A",
-        cd_turma: 1,
-        ds_turma: "Turma A - 1º Ano",
-        cd_sala_aula: 1,
-        ds_sala_aula: "Sala 101",
-        cd_professor: 1,
-        ds_professor: "Carlos Silva",
-        cd_disciplina: 1,
-        ds_disciplina: "Matemática",
-        dt_inicio: "2023-08-01",
-        dt_fim: "2023-12-15",
-        nr_dia_semana: 1,
-        ds_dia_semana: "Segunda-feira",
-        hr_inicio: "08:00",
-        hr_fim: "09:30"
-    },
-    {
-        cd_horario: 2,
-        ds_horario: "Aula de Português - Turma B",
-        cd_turma: 2,
-        ds_turma: "Turma B - 1º Ano",
-        cd_sala_aula: 2,
-        ds_sala_aula: "Sala 102",
-        cd_professor: 2,
-        ds_professor: "Maria Santos",
-        cd_disciplina: 2,
-        ds_disciplina: "Português",
-        dt_inicio: "2023-08-01",
-        dt_fim: "2023-12-15",
-        nr_dia_semana: 2,
-        ds_dia_semana: "Terça-feira",
-        hr_inicio: "10:00",
-        hr_fim: "11:30"
-    },
-    {
-        cd_horario: 3,
-        ds_horario: "Aula de História - Turma C",
-        cd_turma: 3,
-        ds_turma: "Turma A - 2º Ano",
-        cd_sala_aula: 3,
-        ds_sala_aula: "Sala 103",
-        cd_professor: 3,
-        ds_professor: "João Oliveira",
-        cd_disciplina: 3,
-        ds_disciplina: "História",
-        dt_inicio: "2023-08-01",
-        dt_fim: "2023-12-15",
-        nr_dia_semana: 3,
-        ds_dia_semana: "Quarta-feira",
-        hr_inicio: "14:00",
-        hr_fim: "15:30"
-    }
-];
-
 // Variáveis para armazenar os dados das APIs
 let disciplinas = [];
 let professores = [];
 let salas = [];
 let turmas = [];
+let horarios = []; // Agora será carregado da API
 
 // Variável para armazenar o horário que será excluído
 let horarioParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
+    LISTAR_HORARIOS: 'lista_horarios.json',
     EXCLUIR_HORARIO: 'api/horarios/excluir',
     EDITAR_HORARIO: 'api/horarios/editar',
     INCLUIR_HORARIO: 'api/horarios/incluir'
 };
+
+// Função para carregar horários da API
+function carregarHorariosAPI(filtros = {}, callback) {
+    // Simulação de chamada à API com filtros
+    // Na implementação real, os filtros seriam enviados como parâmetros
+    $.ajax({
+        url: API_URLS.LISTAR_HORARIOS,
+        method: 'GET',
+        dataType: 'json',
+        data: filtros, // Envia os filtros como parâmetros
+        success: function(response) {
+            // A resposta é diretamente o array de dados
+            callback(response);
+        },
+        error: function(xhr, status, error) {
+            console.error('Erro ao carregar horários:', error);
+            mostrarMensagem('Erro ao carregar horários da API', 'Erro');
+            callback([]); // Retorna array vazio em caso de erro
+        }
+    });
+}
 
 // Função para carregar dados da API
 function carregarDadosAPI(url, callback) {
@@ -120,9 +85,31 @@ function carregarTodosDados() {
         preencherSelect('#filtroTurma', data, 'cd_turma', 'ds_turma');
         preencherSelect('#cd_turma', data, 'cd_turma', 'ds_turma');
         
-        // Quando todos os dados estiverem carregados, carrega a tabela
+        // Quando todos os dados estiverem carregados, carrega os horários
+        carregarHorariosComFiltros();
+    });
+}
+
+// Função para carregar horários com filtros aplicados
+function carregarHorariosComFiltros() {
+    const filtros = {
+        cd_disciplina: $('#filtroDisciplina').val(),
+        cd_professor: $('#filtroProfessor').val(),
+        cd_sala_aula: $('#filtroSala').val(),
+        cd_turma: $('#filtroTurma').val()
+    };
+    
+    // Remove filtros vazios
+    Object.keys(filtros).forEach(key => {
+        if (!filtros[key]) {
+            delete filtros[key];
+        }
+    });
+    
+    carregarHorariosAPI(filtros, function(data) {
+        horarios = data;
+        carregarTabelaHorarios(horarios);
         $('#loading-spinner').hide();
-        carregarTabelaHorarios();
     });
 }
 
@@ -180,25 +167,15 @@ function formatarData(data) {
 
 // Função para filtrar horários
 function filtrarHorarios() {
-    const filtroDisciplina = $('#filtroDisciplina').val();
-    const filtroProfessor = $('#filtroProfessor').val();
-    const filtroSala = $('#filtroSala').val();
-    const filtroTurma = $('#filtroTurma').val();
-
-    const horariosFiltrados = $.grep(horarios, function(horario) {
-        return (!filtroDisciplina || horario.cd_disciplina == filtroDisciplina) &&
-               (!filtroProfessor || horario.cd_professor == filtroProfessor) &&
-               (!filtroSala || horario.cd_sala_aula == filtroSala) &&
-               (!filtroTurma || horario.cd_turma == filtroTurma);
-    });
-
-    carregarTabelaHorarios(horariosFiltrados);
+    $('#loading-spinner').show();
+    carregarHorariosComFiltros();
 }
 
 // Função para limpar filtros
 function limparFiltros() {
     $('#filtroDisciplina, #filtroProfessor, #filtroSala, #filtroTurma').val('');
-    carregarTabelaHorarios();
+    $('#loading-spinner').show();
+    carregarHorariosComFiltros();
 }
 
 // Função para limpar validações do formulário
@@ -285,6 +262,12 @@ function novoHorario() {
     $('#cd_horario').val('');
     limparValidacoes();
     $('#modalHorario').modal('show');
+}
+
+// Função para encontrar descrição pelo ID
+function encontrarDescricaoPorId(dados, id, idKey, descricaoKey) {
+    const item = $.grep(dados, function(item) { return item[idKey] == id; })[0];
+    return item ? item[descricaoKey] : '';
 }
 
 // Função para editar horário
@@ -389,7 +372,8 @@ function salvarHorario() {
             $('#btnSalvarHorario').prop('disabled', false).html('Salvar');
             
             if (sucesso) {
-                carregarTabelaHorarios();
+                // Recarrega os horários da API após edição
+                carregarHorariosComFiltros();
                 $('#modalHorario').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
             } else {
@@ -402,7 +386,8 @@ function salvarHorario() {
             $('#btnSalvarHorario').prop('disabled', false).html('Salvar');
             
             if (sucesso) {
-                carregarTabelaHorarios();
+                // Recarrega os horários da API após inclusão
+                carregarHorariosComFiltros();
                 $('#modalHorario').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
             } else {
@@ -438,9 +423,8 @@ function confirmarExclusaoHorario() {
         $('#btnConfirmarExclusao').prop('disabled', false).html('Excluir');
         
         if (sucesso) {
-            // Remover horário localmente
-            horarios = $.grep(horarios, function(h) { return h.cd_horario !== horarioParaExcluir; });
-            carregarTabelaHorarios();
+            // Recarrega os horários da API após exclusão
+            carregarHorariosComFiltros();
             $('#modalConfirmacaoExclusao').modal('hide');
             mostrarMensagem(mensagem, 'Sucesso');
         } else {
