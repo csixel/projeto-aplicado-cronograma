@@ -300,29 +300,29 @@
                 </div>
                 <div class="offcanvas-body p-0">
                     <nav class="nav flex-column">
-                        <a class="nav-link active" href="#">
+                        <a class="nav-link active" href="cronograma.html">
                             <i class="bi bi-calendar-week"></i>
                             Cronograma
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="disciplinas.html">
                             <i class="bi bi-book"></i>
                             Disciplinas
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="turmas.html">
                             <i class="bi bi-megaphone"></i>
                             Turmas
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="professores.html">
                             <i class="bi bi-person-badge"></i>
                             Professores
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="salas.html">
                             <i class="bi bi-building"></i>
                             Salas
                         </a>
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="gerenciar_horarios.html">
                             <i class="bi bi-gear"></i>
-                            Configurações
+                            Gerenciar horários
                         </a>
                     </nav>
                 </div>
@@ -331,29 +331,29 @@
             <!-- Sidebar (Desktop) -->
             <div class="col-lg-2 d-none d-lg-block sidebar">
                 <nav class="nav flex-column mt-3">
-                    <a class="nav-link active" href="#">
+                    <a class="nav-link active" href="cronograma.html">
                         <i class="bi bi-calendar-week"></i>
                         Cronograma
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="disciplinas.html">
                         <i class="bi bi-book"></i>
                         Disciplinas
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="turmas.html">
                         <i class="bi bi-people-fill"></i>
                         Turmas
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="professores.html">
                         <i class="bi bi-person-badge"></i>
                         Professores
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="salas.html">
                         <i class="bi bi-building"></i>
                         Salas
                     </a>
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="gerenciar_horarios.html">
                         <i class="bi bi-gear"></i>
-                        Configurações
+                        Gerenciar horários
                     </a>
                 </nav>
             </div>
@@ -450,7 +450,7 @@
         }
 
         // Carrega os horários quando a página é carregada
-        document.addEventListener('DOMContentLoaded', function() {
+        $(document).ready(function() {
             carregarHorarios();
         });
 

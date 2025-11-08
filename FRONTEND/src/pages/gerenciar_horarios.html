@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma Escolar - Gerenciar Horários</title>
+    <!-- Bootstrap 5.1.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap 5.1.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- jQuery (para facilitar as chamadas AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../styles/styles.css">
+</head>
+<body>
+  <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm border-bottom" style="background: url('https://i.postimg.cc/L6DG6bj1/image.png') center/cover no-repeat;">
+        <div class="container-fluid">
+           <button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button> 
+            <a target='_blank'>
+              <img class="image-logo" src='https://i.postimg.cc/Wd5wGHgS/logocrono-removebg-preview.png' border='0' alt='CronoEscolar'>
+            </a>
+            <a class="navbar-brand text-muted" href="#">
+              Sistema de Gestão de Cronograma Escolar
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        João Silva
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Perfil</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+   <!-- Main Container -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Menu (Offcanvas for Mobile) -->
+            <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="sidebarMenu" style="width: 250px;">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body p-0">
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="cronograma.html">
+                            <i class="bi bi-calendar-week"></i>
+                            Cronograma
+                        </a>
+                        <a class="nav-link" href="disciplinas.html">
+                            <i class="bi bi-book"></i>
+                            Disciplinas
+                        </a>
+                        <a class="nav-link" href="turmas.html">
+                            <i class="bi bi-people-fill"></i>
+                            Turmas
+                        </a>
+                        <a class="nav-link" href="professores.html">
+                            <i class="bi bi-person-badge"></i>
+                            Professores
+                        </a>
+                        <a class="nav-link" href="salas.html">
+                            <i class="bi bi-building"></i>
+                            Salas
+                        </a>
+                        <a class="nav-link active" href="gerenciar_horarios.html">
+                            <i class="bi bi-gear"></i>
+                            Gerenciar horários
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Sidebar (Desktop) -->
+            <div class="col-lg-2 d-none d-lg-block sidebar">
+                <nav class="nav flex-column mt-3">
+                    <a class="nav-link" href="cronograma.html">
+                        <i class="bi bi-calendar-week"></i>
+                        Cronograma
+                    </a>
+                    <a class="nav-link" href="disciplinas.html">
+                        <i class="bi bi-book"></i>
+                        Disciplinas
+                    </a>
+                    <a class="nav-link" href="turmas.html">
+                        <i class="bi bi-people-fill"></i>
+                        Turmas
+                    </a>
+                    <a class="nav-link" href="professores.html">
+                        <i class="bi bi-person-badge"></i>
+                        Professores
+                    </a>
+                    <a class="nav-link" href="salas.html">
+                        <i class="bi bi-building"></i>
+                        Salas
+                    </a>
+                    <a class="nav-link active" href="gerenciar_horarios.html">
+                        <i class="bi bi-gear"></i>
+                        Gerenciar horários
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <main class="col-lg-10 col-12 px-md-4 mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Gerenciar Horários</h2>
+                    <button class="btn btn-primary" id="btnNovoHorario">
+                        <i class="bi bi-plus-circle me-1"></i> Novo Horário
+                    </button>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filtros-container card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Filtros</h5>
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="filtroDisciplina" class="form-label">Disciplina</label>
+                                <select class="form-select" id="filtroDisciplina">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filtroProfessor" class="form-label">Professor</label>
+                                <select class="form-select" id="filtroProfessor">
+                                    <option value="">Todos</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filtroSala" class="form-label">Sala</label>
+                                <select class="form-select" id="filtroSala">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="filtroTurma" class="form-label">Turma</label>
+                                <select class="form-select" id="filtroTurma">
+                                    <option value="">Todas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-primary" id="btnFiltrar">Filtrar</button>
+                            <button class="btn btn-outline-secondary" id="btnLimparFiltros">Limpar Filtros</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabela de Horários -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="tabelaHorarios">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Descrição</th>
+                                        <th>Disciplina</th>
+                                        <th>Dia da Semana</th>
+                                        <th>Vigência</th>
+                                        <th>Horário</th>
+                                        <th>Professor</th>
+                                        <th>Sala</th>
+                                        <th>Turma</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Os dados serão preenchidos via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal para Cadastro/Edição de Horário -->
+    <div class="modal fade" id="modalHorario" tabindex="-1" aria-labelledby="modalHorarioLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalHorarioLabel">Cadastrar Horário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formHorario" novalidate>
+                        <input type="hidden" id="cd_horario" name="cd_horario">
+                        <div class="row g-3">
+                            <div class="col-md-6 form-group">
+                                <label for="ds_horario" class="form-label">Descrição do Horário</label>
+                                <input type="text" class="form-control" id="ds_horario" name="ds_horario" maxlength="50" required>
+                                <div class="invalid-feedback" id="ds_horario_error">
+                                    Por favor, informe a descrição do horário.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="cd_turma" class="form-label">Turma</label>
+                                <select class="form-select" id="cd_turma" name="cd_turma" required>
+                                    <option value="">Selecione uma turma</option>
+                                </select>
+                                <div class="invalid-feedback" id="cd_turma_error">
+                                    Por favor, selecione uma turma.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="cd_sala_aula" class="form-label">Sala de Aula</label>
+                                <select class="form-select" id="cd_sala_aula" name="cd_sala_aula" required>
+                                    <option value="">Selecione uma sala</option>
+                                </select>
+                                <div class="invalid-feedback" id="cd_sala_aula_error">
+                                    Por favor, selecione uma sala de aula.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="cd_professor" class="form-label">Professor</label>
+                                <select class="form-select" id="cd_professor" name="cd_professor" required>
+                                    <option value="">Selecione um professor</option>
+                                </select>
+                                <div class="invalid-feedback" id="cd_professor_error">
+                                    Por favor, selecione um professor.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="cd_disciplina" class="form-label">Disciplina</label>
+                                <select class="form-select" id="cd_disciplina" name="cd_disciplina" required>
+                                    <option value="">Selecione uma disciplina</option>
+                                </select>
+                                <div class="invalid-feedback" id="cd_disciplina_error">
+                                    Por favor, selecione uma disciplina.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="nr_dia_semana" class="form-label">Dia da Semana</label>
+                                <select class="form-select" id="nr_dia_semana" name="nr_dia_semana" required>
+                                    <option value="">Selecione um dia</option>
+                                    <option value="1">Segunda-feira</option>
+                                    <option value="2">Terça-feira</option>
+                                    <option value="3">Quarta-feira</option>
+                                    <option value="4">Quinta-feira</option>
+                                    <option value="5">Sexta-feira</option>
+                                </select>
+                                <div class="invalid-feedback" id="nr_dia_semana_error">
+                                    Por favor, selecione um dia da semana.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="dt_inicio" class="form-label">Data de Início</label>
+                                <input type="date" class="form-control" id="dt_inicio" name="dt_inicio" required>
+                                <div class="invalid-feedback" id="dt_inicio_error">
+                                    Por favor, informe a data de início.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="dt_fim" class="form-label">Data de Fim</label>
+                                <input type="date" class="form-control" id="dt_fim" name="dt_fim" required>
+                                <div class="invalid-feedback" id="dt_fim_error">
+                                    Por favor, informe a data de fim.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="hr_inicio" class="form-label">Hora de Início</label>
+                                <input type="time" class="form-control" id="hr_inicio" name="hr_inicio" required>
+                                <div class="invalid-feedback" id="hr_inicio_error">
+                                    Por favor, informe a hora de início.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="hr_fim" class="form-label">Hora de Fim</label>
+                                <input type="time" class="form-control" id="hr_fim" name="hr_fim" required>
+                                <div class="invalid-feedback" id="hr_fim_error">
+                                    Por favor, informe a hora de fim.
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvarHorario">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Confirmação de Exclusão -->
+    <div class="modal fade" id="modalConfirmacaoExclusao" tabindex="-1" aria-labelledby="modalConfirmacaoExclusaoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmacaoExclusaoLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir este horário?</p>
+                    <p class="text-muted" id="detalhesHorarioExclusao"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarExclusao">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Mensagens -->
+    <div class="modal fade" id="modalMensagem" tabindex="-1" aria-labelledby="modalMensagemLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMensagemLabel">Mensagem</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="mensagemConteudo">
+                    <!-- Conteúdo da mensagem será inserido aqui -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../lib/api.js"></script>
+    <script src="../lib/gerenciar_horarios.js"></script>
+</body>
+</html>
