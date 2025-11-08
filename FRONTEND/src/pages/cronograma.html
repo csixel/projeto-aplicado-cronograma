@@ -258,6 +258,22 @@
           color: #ffffff;
         }
 
+        .fc .fc-button-primary {
+          background-color: transparent !important;
+          border-color: #007bff !important;
+          color: #007bff !important;
+        }
+
+        .fc .fc-button-primary:hover {
+          background-color: #007bff !important;
+          color: white !important;
+        }
+
+        /* Ou usando as classes do Bootstrap se estiver usando */
+        .fc .fc-prev-button,
+        .fc .fc-next-button {
+          @extend .btn-outline-primary;
+        }
     </style>
 </head>
 <body>
