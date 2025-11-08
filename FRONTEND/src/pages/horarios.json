@@ -1,0 +1,20 @@
+[
+    {
+      "title": "<span class=\"event-icon\"><i class=\"bi bi-clock fs-6\"></i></span> 08:00 &agrave;s 09:00<hr/>Matemática <br/> Turma 1º A <br/> Sala 101 <br/> Professor: Alicia",
+      "allDay": true,
+      "daysOfWeek": [1],
+      "startRecur": "2025-11-03",
+      "endRecur": "2025-12-05",
+      "startTime": "08:00:00",
+      "className": "evento-azul"
+    },
+    {
+      "title": "<span class=\"event-icon\"><i class=\"bi bi-clock fs-6\"></i></span> 09:00 &agrave;s 10:00<hr/>Português <br/> Turma 2º D <br/> Sala 102 <br/> Professor: Maria",
+      "allDay": true,
+      "daysOfWeek": [2],
+      "startRecur": "2025-11-03",
+      "endRecur": "2025-12-05",
+      "startTime": "08:00:00",
+      "className": "evento-teal"
+    }
+]
