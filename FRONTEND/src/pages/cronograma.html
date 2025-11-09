@@ -268,16 +268,7 @@
           background-color: #007bff !important;
           color: white !important;
         }
-<<<<<<< HEAD
         
-=======
-
-        /* Ou usando as classes do Bootstrap se estiver usando */
-        .fc .fc-prev-button,
-        .fc .fc-next-button {
-          @extend .btn-outline-primary;
-        }
->>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
     </style>
 </head>
 <body>
@@ -288,11 +279,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button> 
             <a target='_blank'>
-<<<<<<< HEAD
               <img class="image-logo" src='https://i.postimg.cc/Wd5wGHgS/logocrono-removebg-preview.png' alt='CronoEscolar'>
-=======
-              <img class="image-logo" src='https://i.postimg.cc/Wd5wGHgS/logocrono-removebg-preview.png' border='0' alt='CronoEscolar'>
->>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
             </a>
             <a class="navbar-brand text-muted" href="#">
               Sistema de Gestão de Cronograma Escolar
@@ -402,7 +389,7 @@
             $('#calendar').hide();
             
             // Substitua esta URL pelo endpoint real da sua API
-            const apiUrl = 'horarios.json'; // Para teste local
+            const apiUrl = '../API/horarios.json'; // Para teste local
             
             $.ajax({
                 url: apiUrl,

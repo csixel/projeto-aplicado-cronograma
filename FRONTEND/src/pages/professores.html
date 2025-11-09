@@ -1,76 +1,269 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Cadastro de Professores</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" href="../styles/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cronograma Escolar - Gerenciar Professores</title>
+    <!-- Bootstrap 5.1.3 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap 5.1.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- jQuery (para facilitar as chamadas AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
-  <main class="py-4">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-12 col-md-10 col-lg-8">
-          <div class="card shadow-sm">
-            <div class="card-header bg-white">
-              <h1 class="h4 mb-0">Cadastro de Professores</h1>
+  <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm border-bottom" style="background: url('https://i.postimg.cc/L6DG6bj1/image.png') center/cover no-repeat;">
+        <div class="container-fluid">
+           <button class="navbar-toggler me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button> 
+            <a target='_blank'>
+              <img class="image-logo" src='https://i.postimg.cc/Wd5wGHgS/logocrono-removebg-preview.png' border='0' alt='CronoEscolar'>
+            </a>
+            <a class="navbar-brand text-muted" href="#">
+              Sistema de Gestão de Cronograma Escolar
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        João Silva
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Perfil</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configurações</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right me-2"></i>Sair</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="card-body">
-              <form id="professores-form">
-                <div class="mb-3">
-                  <label for="nome" class="form-label">Nome</label>
-                  <input type="text" class="form-control" id="nome" name="nome" 
-                    placeholder="Digite o nome completo" required minlength="3" pattern="[A-Za-zÀ-ÿ\s]{3,}" 
-                    title="Por favor, insira pelo menos 3 caracteres (apenas letras e espaços)" />
-                </div>
-
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" name="email" placeholder="exemplo@escola.com" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$"
-                    title="Digite um email válido (ex: usuario@exemplo.com.br)" required>
-                </div>
-
-                <div class="mb-3">
-                  <label for="disciplina" class="form-label">Disciplina</label>
-                  <input type="text" class="form-control" id="disciplina" name="disciplina" placeholder="Ex.: Matemática" minlength="3" required>
-                </div>
-
-                <div class="row g-3">
-                  <div class="col-12 col-md-6">
-                    <label for="telefone" class="form-label">Telefone</label>
-                    <input type="tel" class="form-control" id="telefone" name="telefone" placeholder="(00) 00000-0000"
-                      maxlength="15" oninput="formatarTelefone(this)"  pattern="^\(\d{2}\)\s\d{4,5}-\d{4}$"
-                      title="Digite o telefone no formato: (99) 99999-9999"
-                      required>
-                  </div>
-                  <div class="col-12 col-md-6">
-                    <label for="cpf" class="form-label">CPF</label>
-                    <input type="text" class="form-control" id="cpf" name="cpf"
-                     placeholder="000.000.000-00" maxlength="14" oninput="formatarCPF(this)"
-                     aria-describedby="cpfHelp">
-                    <div id="cpfHelp" class="form-text"></div>
-                  </div>
-                </div>
-
-                <div class="d-flex gap-2 mt-4">
-                  <button type="button" class="btn btn-primary" onclick="validarFormularioProfessor()">Salvar</button>
-                  <button type="reset" class="btn btn-outline-secondary">Limpar</button>
-                  <a href="consultar.html" class="btn btn-outline-info">Consultar Professores</a>
-                </div>
-              </form>
-            </div>
-          </div>
         </div>
-      </div>
+    </nav>
+   <!-- Main Container -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Menu (Offcanvas for Mobile) -->
+            <div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="sidebarMenu" style="width: 250px;">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">Menu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                </div>
+                <div class="offcanvas-body p-0">
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="cronograma.html">
+                            <i class="bi bi-calendar-week"></i>
+                            Cronograma
+                        </a>
+                        <a class="nav-link" href="disciplinas.html">
+                            <i class="bi bi-book"></i>
+                            Disciplinas
+                        </a>
+                        <a class="nav-link" href="turmas.html">
+                            <i class="bi bi-people-fill"></i>
+                            Turmas
+                        </a>
+                        <a class="nav-link active" href="professores.html">
+                            <i class="bi bi-person-badge"></i>
+                            Professores
+                        </a>
+                        <a class="nav-link" href="salas.html">
+                            <i class="bi bi-building"></i>
+                            Salas
+                        </a>
+                        <a class="nav-link" href="gerenciar_horarios.html">
+                            <i class="bi bi-gear"></i>
+                            Gerenciar horários
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Sidebar (Desktop) -->
+            <div class="col-lg-2 d-none d-lg-block sidebar">
+                <nav class="nav flex-column mt-3">
+                    <a class="nav-link" href="cronograma.html">
+                        <i class="bi bi-calendar-week"></i>
+                        Cronograma
+                    </a>
+                    <a class="nav-link" href="disciplinas.html">
+                        <i class="bi bi-book"></i>
+                        Disciplinas
+                    </a>
+                    <a class="nav-link" href="turmas.html">
+                        <i class="bi bi-people-fill"></i>
+                        Turmas
+                    </a>
+                    <a class="nav-link active" href="professores.html">
+                        <i class="bi bi-person-badge"></i>
+                        Professores
+                    </a>
+                    <a class="nav-link" href="salas.html">
+                        <i class="bi bi-building"></i>
+                        Salas
+                    </a>
+                    <a class="nav-link" href="gerenciar_horarios.html">
+                        <i class="bi bi-gear"></i>
+                        Gerenciar horários
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <main class="col-lg-10 col-12 px-md-4 mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="mb-0">Gerenciar Professores</h2>
+                    <button class="btn btn-primary" id="btnNovoProfessor">
+                        <i class="bi bi-plus-circle me-1"></i> Novo Professor
+                    </button>
+                </div>
+
+                <!-- Filtro de Busca por Nome -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="filtroNome" placeholder="Buscar por nome do professor...">
+                            <button class="btn btn-outline-secondary" type="button" id="btnFiltrar">
+                                <i class="bi bi-search"></i> Buscar
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" id="btnLimparFiltros">
+                                <i class="bi bi-x-circle"></i> Limpar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Spinner de Carregamento -->
+                <div id="loading-spinner" class="loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-2">Carregando professores...</p>
+                </div>
+
+                <!-- Tabela de Professores -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="tabelaProfessores">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nome</th>
+                                        <th>Disciplinas</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Os dados serão preenchidos via JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
-  </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <script src="../lib/professoresPost.js"></script>
-  <script src="../lib/formatarCampos.js"></script>
+    <!-- Modal para Cadastro/Edição de Professor -->
+    <div class="modal fade" id="modalProfessor" tabindex="-1" aria-labelledby="modalProfessorLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProfessorLabel">Cadastrar Professor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formProfessor" novalidate>
+                        <input type="hidden" id="cd_professor" name="cd_professor">
+                        <div class="row g-3">
+                            <div class="col-12 form-group">
+                                <label for="ds_nome" class="form-label">Nome Completo</label>
+                                <input type="text" class="form-control" id="ds_nome" name="ds_nome" maxlength="100" required>
+                                <div class="invalid-feedback" id="ds_nome_error">
+                                    Por favor, informe o nome completo (3-100 caracteres, sem números).
+                                </div>
+                            </div>
+                            <div class="col-12 form-group">
+                                <label for="ds_email" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="ds_email" name="ds_email" maxlength="100" required>
+                                <div class="invalid-feedback" id="ds_email_error">
+                                    Por favor, informe um e-mail válido.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="ds_telefone" class="form-label">Telefone</label>
+                                <input type="text" class="form-control" id="ds_telefone" name="ds_telefone" maxlength="15" required placeholder="(00) 00000-0000">
+                                <div class="invalid-feedback" id="ds_telefone_error">
+                                    Por favor, informe um telefone válido.
+                                </div>
+                            </div>
+                            <div class="col-md-6 form-group">
+                                <label for="ds_cpf" class="form-label">CPF</label>
+                                <input type="text" class="form-control" id="ds_cpf" name="ds_cpf" maxlength="14" required placeholder="000.000.000-00">
+                                <div class="invalid-feedback" id="ds_cpf_error">
+                                    Por favor, informe um CPF válido.
+                                </div>
+                            </div>
+                            <div class="col-12 form-group">
+                                <label for="ds_area_atuacao" class="form-label">Área de Atuação</label>
+                                <input type="text" class="form-control" id="ds_area_atuacao" name="ds_area_atuacao" maxlength="100" required>
+                                <div class="invalid-feedback" id="ds_area_atuacao_error">
+                                    Por favor, informe a área de atuação.
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btnSalvarProfessor">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Confirmação de Exclusão -->
+    <div class="modal fade" id="modalConfirmacaoExclusao" tabindex="-1" aria-labelledby="modalConfirmacaoExclusaoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalConfirmacaoExclusaoLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir este professor?</p>
+                    <p class="text-muted" id="detalhesProfessorExclusao"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarExclusao">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Mensagens -->
+    <div class="modal fade" id="modalMensagem" tabindex="-1" aria-labelledby="modalMensagemLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMensagemLabel">Mensagem</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="mensagemConteudo">
+                    <!-- Conteúdo da mensagem será inserido aqui -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../lib/professores.js"></script>
 </body>
-
 </html>
-
-

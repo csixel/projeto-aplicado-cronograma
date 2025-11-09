@@ -27,3 +27,34 @@ http://localhost:3000/disciplina/alterarDisciplina/nome da disciplina aqui
 }
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
+
+**********************************************
+************** SUGESTÕES E ALTERAÇÕES CAMILA **************
+**********************************************
+
+1) A API de Remover, troquei o parâmetro que ela recebe de "String" (era o nome da disciplina), para ser o código da disciplina (cd_disciplina), 
+remove a disciplina do código repassado.
+
+Ex.: http://localhost:3000/disciplina/deletarDisciplina/13
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+2) A API de alterar uma disciplina cadastrada, troquei o parâmetro que ela recebe de "String" (era o nome da disciplina), para ser o código da disciplina (cd_disciplina), 
+altera a disciplina do código repassado.
+
+Ex.: http://localhost:3000/disciplina/alterarDisciplina/13
+{
+  "ds_disciplina": "Novo nome da disciplina"
+}
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+3) A API de GET para listar as disciplinas tinha duas opções buscar todas ou buscar por nome (onde o nome era obrigatório).
+Modifiquei a que busca pelo nome para buscarDisciplina, sendo o parâmetro da busca opcional, dessa forma no front-end eu passo o parâmetro se o usuário digitar, 
+senão eu não passo, mas sempre chamo a mesma API, ai não preciso tratar no front-end para chamar uma API se ele digitou algo na busca ou chamar outra API se ele não digitou.
+
+4) Nos erros que ocorrem nas APIS, modifiquei para trazer a mensagem do motivo do erro, por exemplo, quando adiciono uma disciplina com o nome de outra que já está cadastrada, a mensagem devolvida era:
+"Erro ao criar disciplina", na tela para o usuário não fica claro o motivo do erro. 
+Modifiquei a mensagem para trazer o motivo do erro
