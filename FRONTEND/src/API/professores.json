@@ -1,0 +1,10 @@
+[
+  {"cd_professor": 1, "ds_nome": "Carlos Silva"},
+  {"cd_professor": 2, "ds_nome": "Maria Santos"},
+  {"cd_professor": 3, "ds_nome": "João Oliveira"},
+  {"cd_professor": 4, "ds_nome": "Ana Costa"},
+  {"cd_professor": 5, "ds_nome": "Pedro Almeida"},
+  {"cd_professor": 6, "ds_nome": "Juliana Pereira"},
+  {"cd_professor": 7, "ds_nome": "Ricardo Fernandes"},
+  {"cd_professor": 8, "ds_nome": "Fernanda Lima"}
+]

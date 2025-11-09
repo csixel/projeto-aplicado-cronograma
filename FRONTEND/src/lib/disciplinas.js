@@ -13,14 +13,21 @@ const API_URLS = {
 };
 
 // Função para carregar disciplinas da API
+<<<<<<< HEAD
 function carregarDisciplinasAPI(filtros = {}, callback) {
     // Simulação de chamada à API com filtros
     // Na implementação real, os filtros seriam enviados como parâmetros
+=======
+function carregarDisciplinasAPI(callback) {
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
     $.ajax({
         url: API_URLS.LISTAR_DISCIPLINAS,
         method: 'GET',
         dataType: 'json',
+<<<<<<< HEAD
         data: filtros, // Envia os filtros como parâmetros
+=======
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
         success: function(response) {
             callback(response);
         },
@@ -32,6 +39,7 @@ function carregarDisciplinasAPI(filtros = {}, callback) {
     });
 }
 
+<<<<<<< HEAD
 // Função para carregar disciplinas com filtros
 function carregarDisciplinasComFiltros() {
     $('#loading-spinner').show();
@@ -39,12 +47,20 @@ function carregarDisciplinasComFiltros() {
     const filtros = obterFiltros();
     
     carregarDisciplinasAPI(filtros, function(data) {
+=======
+// Função para carregar todas as disciplinas
+function carregarTodasDisciplinas() {
+    $('#loading-spinner').show();
+    
+    carregarDisciplinasAPI(function(data) {
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
         disciplinas = data;
         carregarTabelaDisciplinas();
         $('#loading-spinner').hide();
     });
 }
 
+<<<<<<< HEAD
 // Função para obter os filtros atuais
 function obterFiltros() {
     const filtroDescricao = $('#filtroDescricao').val().trim();
@@ -58,6 +74,8 @@ function obterFiltros() {
     return filtros;
 }
 
+=======
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
 // Função para carregar a tabela com as disciplinas
 function carregarTabelaDisciplinas() {
     const $tbody = $('#tabelaDisciplinas tbody');
@@ -85,6 +103,7 @@ function carregarTabelaDisciplinas() {
     });
 }
 
+<<<<<<< HEAD
 // Função para filtrar disciplinas
 function filtrarDisciplinas() {
     carregarDisciplinasComFiltros();
@@ -96,6 +115,8 @@ function limparFiltros() {
     carregarDisciplinasComFiltros();
 }
 
+=======
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
 // Função para limpar validações do formulário
 function limparValidacoes() {
     $('#formDisciplina .form-control').removeClass('is-invalid');
@@ -233,7 +254,11 @@ function salvarDisciplina() {
             
             if (sucesso) {
                 // Recarrega as disciplinas da API após edição
+<<<<<<< HEAD
                 carregarDisciplinasComFiltros();
+=======
+                carregarTodasDisciplinas();
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
                 $('#modalDisciplina').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
             } else {
@@ -247,7 +272,11 @@ function salvarDisciplina() {
             
             if (sucesso) {
                 // Recarrega as disciplinas da API após inclusão
+<<<<<<< HEAD
                 carregarDisciplinasComFiltros();
+=======
+                carregarTodasDisciplinas();
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
                 $('#modalDisciplina').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
             } else {
@@ -282,7 +311,11 @@ function confirmarExclusaoDisciplina() {
         
         if (sucesso) {
             // Recarrega as disciplinas da API após exclusão
+<<<<<<< HEAD
             carregarDisciplinasComFiltros();
+=======
+            carregarTodasDisciplinas();
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
             $('#modalConfirmacaoExclusao').modal('hide');
             mostrarMensagem(mensagem, 'Sucesso');
         } else {
@@ -303,14 +336,21 @@ function mostrarMensagem(mensagem, titulo = 'Mensagem') {
 // Inicialização quando a página carrega
 $(document).ready(function() {
     // Carrega todas as disciplinas
+<<<<<<< HEAD
     carregarDisciplinasComFiltros();
+=======
+    carregarTodasDisciplinas();
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
     
     // Event listeners usando jQuery
     $('#btnSalvarDisciplina').on('click', salvarDisciplina);
     $('#btnNovaDisciplina').on('click', novaDisciplina);
     $('#btnConfirmarExclusao').on('click', confirmarExclusaoDisciplina);
+<<<<<<< HEAD
     $('#btnFiltrar').on('click', filtrarDisciplinas);
     $('#btnLimparFiltros').on('click', limparFiltros);
+=======
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
     
     // Event delegation para botões de edição e exclusão na tabela
     $('#tabelaDisciplinas').on('click', '.btn-editar', function() {
@@ -323,6 +363,7 @@ $(document).ready(function() {
         prepararExclusaoDisciplina(cd_disciplina);
     });
     
+<<<<<<< HEAD
     // Buscar ao pressionar Enter no campo de filtro
     $('#filtroDescricao').on('keypress', function(e) {
         if (e.which === 13) { // Enter key
@@ -330,6 +371,8 @@ $(document).ready(function() {
         }
     });
     
+=======
+>>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
     // Limpar validação quando o usuário começar a digitar/corrigir
     $('#formDisciplina .form-control').on('input change', function() {
         $(this).removeClass('is-invalid');
