@@ -26,4 +26,32 @@ export class SalaController{
     
     }
 
+    async BuscarTodasSalas(req: Request, res: Response) {
+        try {
+            const salas = await this.salaService.BuscarTodasSalas();
+            res.status(200).json(salas);
+        }catch(error) {
+            res.status(500).json({ message: "Erro ao buscar todas as salas" });
+        }
+    }
+    async BuscarSalaPeloCd (req: Request<{cd_sala_aula:number}>, res: Response) {
+        try {
+            const {cd_sala_aula } = req.params
+            const sala = await this.salaService.BuscarSalaPeloCd(cd_sala_aula);
+            res.status(200).json(sala);
+        } catch(error) {
+            res.status(500).json({ message: "Erro ao buscar sala" });
+        }
+    }
+
+    async alterarSala(req: Request<{cd_sala_aula:number},unknown,Partial<CreateSala>>, res: Response) {
+        try {
+            const {cd_sala_aula} = req.params
+            const dadosAtualizados = req.body;
+            const novaSala = await this.salaService.alterarSala(cd_sala_aula, dadosAtualizados);
+            res.status(200).json(novaSala);
+        }catch(error) {
+            res.status(500).json({ message: "Erro ao atualizar sala" });
+        }
+    }
 }
