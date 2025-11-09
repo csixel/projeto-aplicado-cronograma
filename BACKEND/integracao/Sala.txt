@@ -6,4 +6,26 @@ para criar um sala o backend você precisa enviar os dados dessa forma
 http://localhost:3000/sala/criarSala
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
+para deletar uma sala o backend você precisa enviar os dados dessa forma
+http://localhost:3000/sala/deletarSala/ <<<< aqui você deve informar o id da sala que vai ser deletada
+{
+  "id": 1
+}
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para buscar todas as salas cadastradas você deve dar um get nesta rota aqui 
+http://localhost:3000/sala/buscarTodasSalas
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para buscar salas cadastradas pelo nome (caixinha de pesquisa sem utilizar todas as letras) você deve dar um get nesta rota aqui 
+http://localhost:3000/sala/buscarSalaPeloCd/colocar aqui o id da sala
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para modificar uma sala cadastrado deverá ser utilizada essa rota aqui
+http://localhost:3000/sala/alterarSala/aqui deverá ser preenchido o ID da sala que é o identificar único
+{
+  "ds_sala_aula": "Laboratório 02",
+  "nr_alunos_maximo": 30
+}
+forma de envio deve contar o ds_sala_aula e o nr_alunos_maximo
 
