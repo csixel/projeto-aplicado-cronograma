@@ -15,4 +15,14 @@ export class AlunoController{
         }
     
     }
+    async DeletarAluno(req: Request<{cpf:string}>, res: Response){
+        try{
+            const {cpf } = req.params
+            const aluno = await this.alunoService.deletarAluno(cpf);
+            res.status(200).json(aluno);
+        }catch(error){
+            res.status(500).json({ message: "Erro ao deletar aluno" });
+        }
+    }
+    
 }
