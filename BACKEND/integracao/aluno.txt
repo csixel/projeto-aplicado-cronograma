@@ -1,0 +1,28 @@
+para criar um aluno o backend você precisa enviar os dados dessa forma
+{
+  "ds_nome": "Rafael Almeida",
+  "ds_email": "rafael.almeida@example.com",
+  "ds_senha": "SenhaForte!2025",
+  "cpf": "12345678909",
+  "ds_telefone": "5548999123456"
+}
+http://localhost:3000/aluno/criarAluno  
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para deletar uma aluno o backend você precisa enviar os dados dessa forma
+http://localhost:3000/aluno/deletarAluno/ <<<< aqui você deve informar o cpf do aluno que vai ser deletado
+{
+  "cpf": "12345678909"
+}
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para buscar todas as alunos cadastradas você deve dar um get nesta rota aqui 
+http://localhost:3000/aluno/buscarTodosAlunos/
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para buscar alunos cadastradas pelo nome (caixinha de pesquisa sem utilizar todas as letras) você deve dar um get nesta rota aqui 
+http://localhost:3000/aluno/buscarAlunoPeloNome/?q=ana
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para modificar uma aluno cadastrado deverá ser utilizada essa rota aqui
+http://localhost:3000/aluno/alterarAluno/aqui deverá ser preenchido o CPF do aluno que é o identificar único

@@ -1,7 +1,7 @@
 export interface CreateProfessor {
-    nome: string;
-    email: string;
-    disciplina: string;
-    telefone: string;
-    cpf: string;
+    ds_nome: string;
+    ds_email: string;
+    ds_disciplina: string;
+    ds_telefone: string;
+    ds_cpf: string;
 }

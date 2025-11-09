@@ -5,7 +5,7 @@ export class ProfessorService {
     private professorRepository = AppDataSource.getRepository(Professor);
 
     async criarProfessor(professor: CreateProfessor) {
-        const professorExistente = await this.professorRepository.findOne({ where: { cpf: professor.cpf } });
+        const professorExistente = await this.professorRepository.findOne({ where: { ds_cpf: professor.ds_cpf} });
         if (professorExistente) {
             throw new Error("CPF já cadastrado");
         }
@@ -14,7 +14,7 @@ export class ProfessorService {
         return novoProfessor;
     }
     async BuscarProfessorPorCPF(cpf: string) {
-        const professor = await this.professorRepository.findOne({ where: { cpf } });
+        const professor = await this.professorRepository.findOne({ where: { ds_cpf: cpf} });
         if (professor) {
             return professor; // cpf existe 
         }
@@ -22,7 +22,7 @@ export class ProfessorService {
     }
 
     async deletarProfessor(cpf: string) {
-        const professor = await this.professorRepository.findOne({ where: { cpf } });
+        const professor = await this.professorRepository.findOne({ where: { ds_cpf: cpf } });
         if (!professor) {
             throw new Error("Professor não encontrado");
         }
@@ -35,14 +35,14 @@ export class ProfessorService {
     }
 
     async BuscarProfessorPorId(id_professor: number) {
-        const professor = await this.professorRepository.findOne({ where: { id_professor } });
+        const professor = await this.professorRepository.findOne({ where: { cd_professor: id_professor} });
         if (!professor) {
             throw new Error("Professor não encontrado");
         }
         return professor;
     }
     async ModificarProfessor(id_professor: number, dadosAtualizados: Partial<CreateProfessor>){
-        const buscarProfessor = await this.professorRepository.findOne({ where: { id_professor } });
+        const buscarProfessor = await this.professorRepository.findOne({ where: { cd_professor: id_professor} });
         if (!buscarProfessor) {
             throw new Error("Professor não encontrado");
         }

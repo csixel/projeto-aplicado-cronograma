@@ -34,7 +34,11 @@ export class DisciplinaService {
     return disciplinas;
   }
 
+<<<<<<< HEAD
+  async buscarDisiplinaPeloNome(term: string, page = 1, pageSize = 50) {
+=======
   async buscarDisciplina(term: string, page = 1, pageSize = 10) {
+>>>>>>> ccf806f289fbdf69cfe056bb02863733f92e22ad
     const q = (term ?? '').trim();
     if (q.length == 1) return []; // evita varredura com 1 caractere
 

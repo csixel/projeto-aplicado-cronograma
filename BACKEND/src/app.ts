@@ -4,6 +4,7 @@ import cors from "cors";
 import { AppDataSource } from "./data-source/data-source";
 import professorRouter from "./routes/ProfessorRoutes";
 import disciplinaRouter from "./routes/DisciplinaRoutes";
+import alunoRouter from "./routes/AlunoRoutes";
 
 const app = express();
 app.use(cors());
@@ -11,6 +12,8 @@ app.use(cors());
 app.use(express.json());
 app.use("/professor",professorRouter);
 app.use("/disciplina",disciplinaRouter);
+app.use("/aluno",alunoRouter);
+
 
 AppDataSource.initialize()
   .then(() => {
