@@ -9,7 +9,7 @@ export class Disciplina {
     nome!: string
      
     @Column()
-    descricao!: number
+    descricao!: string
 
     @Column()
     carga_horaria!: number
