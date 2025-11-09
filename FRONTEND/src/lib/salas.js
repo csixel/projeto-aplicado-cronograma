@@ -13,11 +13,14 @@ const API_URLS = {
 };
 
 // Função para carregar salas da API
-function carregarSalasAPI(callback) {
+function carregarSalasAPI(filtros = {}, callback) {
+    // Simulação de chamada à API com filtros
+    // Na implementação real, os filtros seriam enviados como parâmetros
     $.ajax({
         url: API_URLS.LISTAR_SALAS,
         method: 'GET',
         dataType: 'json',
+        data: filtros, // Envia os filtros como parâmetros
         success: function(response) {
             callback(response);
         },
@@ -29,15 +32,30 @@ function carregarSalasAPI(callback) {
     });
 }
 
-// Função para carregar todas as salas
-function carregarTodasSalas() {
+// Função para carregar salas com filtros
+function carregarSalasComFiltros() {
     $('#loading-spinner').show();
     
-    carregarSalasAPI(function(data) {
+    const filtros = obterFiltros();
+    
+    carregarSalasAPI(filtros, function(data) {
         salas = data;
         carregarTabelaSalas();
         $('#loading-spinner').hide();
     });
+}
+
+// Função para obter os filtros atuais
+function obterFiltros() {
+    const filtroDescricao = $('#filtroDescricao').val().trim();
+    
+    const filtros = {};
+    
+    if (filtroDescricao) {
+        filtros.ds_sala_aula = filtroDescricao;
+    }
+    
+    return filtros;
 }
 
 // Função para carregar a tabela com as salas
@@ -66,6 +84,17 @@ function carregarTabelaSalas() {
         `);
         $tbody.append(tr);
     });
+}
+
+// Função para filtrar salas
+function filtrarSalas() {
+    carregarSalasComFiltros();
+}
+
+// Função para limpar filtros
+function limparFiltros() {
+    $('#filtroDescricao').val('');
+    carregarSalasComFiltros();
 }
 
 // Função para limpar validações do formulário
@@ -207,7 +236,7 @@ function salvarSala() {
             
             if (sucesso) {
                 // Recarrega as salas da API após edição
-                carregarTodasSalas();
+                carregarSalasComFiltros();
                 $('#modalSala').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
             } else {
@@ -221,7 +250,7 @@ function salvarSala() {
             
             if (sucesso) {
                 // Recarrega as salas da API após inclusão
-                carregarTodasSalas();
+                carregarSalasComFiltros();
                 $('#modalSala').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
             } else {
@@ -257,7 +286,7 @@ function confirmarExclusaoSala() {
         
         if (sucesso) {
             // Recarrega as salas da API após exclusão
-            carregarTodasSalas();
+            carregarSalasComFiltros();
             $('#modalConfirmacaoExclusao').modal('hide');
             mostrarMensagem(mensagem, 'Sucesso');
         } else {
@@ -278,12 +307,14 @@ function mostrarMensagem(mensagem, titulo = 'Mensagem') {
 // Inicialização quando a página carrega
 $(document).ready(function() {
     // Carrega todas as salas
-    carregarTodasSalas();
+    carregarSalasComFiltros();
     
     // Event listeners usando jQuery
     $('#btnSalvarSala').on('click', salvarSala);
     $('#btnNovaSala').on('click', novaSala);
     $('#btnConfirmarExclusao').on('click', confirmarExclusaoSala);
+    $('#btnFiltrar').on('click', filtrarSalas);
+    $('#btnLimparFiltros').on('click', limparFiltros);
     
     // Event delegation para botões de edição e exclusão na tabela
     $('#tabelaSalas').on('click', '.btn-editar', function() {
@@ -294,6 +325,13 @@ $(document).ready(function() {
     $('#tabelaSalas').on('click', '.btn-excluir', function() {
         const cd_sala_aula = parseInt($(this).data('id'));
         prepararExclusaoSala(cd_sala_aula);
+    });
+    
+    // Buscar ao pressionar Enter no campo de filtro
+    $('#filtroDescricao').on('keypress', function(e) {
+        if (e.which === 13) { // Enter key
+            filtrarSalas();
+        }
     });
     
     // Limpar validação quando o usuário começar a digitar/corrigir

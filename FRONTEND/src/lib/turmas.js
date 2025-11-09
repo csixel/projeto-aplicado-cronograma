@@ -4,6 +4,9 @@ let turmas = [];
 // Variável para armazenar a turma que será excluída
 let turmaParaExcluir = null;
 
+// Variável para armazenar o filtro atual
+let filtroAtual = '';
+
 // URLs das APIs fictícias
 const API_URLS = {
     LISTAR_TURMAS: 'turmas_crud.json',
@@ -12,12 +15,20 @@ const API_URLS = {
     INCLUIR_TURMA: 'api/turmas/incluir'
 };
 
-// Função para carregar turmas da API
-function carregarTurmasAPI(callback) {
+// Função para carregar turmas da API com filtro
+function carregarTurmasAPI(filtroDescricao = '', callback) {
+    const params = {};
+    
+    // Adiciona o parâmetro de filtro apenas se não estiver vazio
+    if (filtroDescricao && filtroDescricao.trim() !== '') {
+        params.ds_turma = filtroDescricao.trim();
+    }
+    
     $.ajax({
         url: API_URLS.LISTAR_TURMAS,
         method: 'GET',
         dataType: 'json',
+        data: params, // Envia os parâmetros para a API
         success: function(response) {
             callback(response);
         },
@@ -33,11 +44,25 @@ function carregarTurmasAPI(callback) {
 function carregarTodasTurmas() {
     $('#loading-spinner').show();
     
-    carregarTurmasAPI(function(data) {
+    carregarTurmasAPI(filtroAtual, function(data) {
         turmas = data;
         carregarTabelaTurmas();
         $('#loading-spinner').hide();
     });
+}
+
+// Função para aplicar filtro de busca
+function aplicarFiltro() {
+    const filtro = $('#filtroDescricao').val().trim();
+    filtroAtual = filtro;
+    carregarTodasTurmas();
+}
+
+// Função para limpar filtro
+function limparFiltro() {
+    $('#filtroDescricao').val('');
+    filtroAtual = '';
+    carregarTodasTurmas();
 }
 
 // Função para carregar a tabela com as turmas
@@ -46,7 +71,10 @@ function carregarTabelaTurmas() {
     $tbody.empty();
 
     if (turmas.length === 0) {
-        $tbody.append('<tr><td colspan="4" class="text-center">Nenhuma turma encontrada</td></tr>');
+        const mensagem = filtroAtual 
+            ? `Nenhuma turma encontrada para "${filtroAtual}"`
+            : 'Nenhuma turma encontrada';
+        $tbody.append(`<tr><td colspan="4" class="text-center">${mensagem}</td></tr>`);
         return;
     }
 
@@ -68,13 +96,12 @@ function carregarTabelaTurmas() {
     });
 }
 
-// Função para limpar validações do formulário
+// Restante das funções permanecem iguais (limparValidacoes, mostrarErroCampo, validarFormulario, etc.)
 function limparValidacoes() {
     $('#formTurma .form-control').removeClass('is-invalid');
     $('#formTurma .invalid-feedback').hide();
 }
 
-// Função para mostrar erro em um campo específico
 function mostrarErroCampo(selector, mensagem) {
     const $campo = $(selector);
     const $feedback = $(selector + '_error');
@@ -86,14 +113,11 @@ function mostrarErroCampo(selector, mensagem) {
     $feedback.show();
 }
 
-// Função para validar formulário
 function validarFormulario() {
     let valido = true;
     
-    // Limpa validações anteriores
     limparValidacoes();
     
-    // Valida campos obrigatórios
     $('#formTurma .form-control[required]').each(function() {
         if (!$(this).val()) {
             mostrarErroCampo('#' + $(this).attr('id'));
@@ -101,7 +125,6 @@ function validarFormulario() {
         }
     });
     
-    // Validações customizadas
     const dsTurma = $('#ds_turma').val();
     if (dsTurma && dsTurma.length > 50) {
         mostrarErroCampo('#ds_turma', 'A descrição da turma não pode ter mais de 50 caracteres');
@@ -117,7 +140,6 @@ function validarFormulario() {
     return valido;
 }
 
-// Função para abrir modal para cadastrar nova turma
 function novaTurma() {
     $('#modalTurmaLabel').text('Cadastrar Turma');
     $('#formTurma')[0].reset();
@@ -126,7 +148,6 @@ function novaTurma() {
     $('#modalTurma').modal('show');
 }
 
-// Função para editar turma
 function editarTurma(cd_turma) {
     const turma = $.grep(turmas, function(t) { return t.cd_turma === cd_turma; })[0];
     if (!turma) return;
@@ -140,9 +161,7 @@ function editarTurma(cd_turma) {
     $('#modalTurma').modal('show');
 }
 
-// Função para chamar API de inclusão de turma
 function incluirTurmaAPI(dados, callback) {
-    // Simulação de chamada à API
     $.ajax({
         url: API_URLS.INCLUIR_TURMA,
         method: 'POST',
@@ -157,9 +176,7 @@ function incluirTurmaAPI(dados, callback) {
     });
 }
 
-// Função para chamar API de edição de turma
 function editarTurmaAPI(cd_turma, dados, callback) {
-    // Simulação de chamada à API
     $.ajax({
         url: API_URLS.EDITAR_TURMA,
         method: 'PUT',
@@ -174,9 +191,7 @@ function editarTurmaAPI(cd_turma, dados, callback) {
     });
 }
 
-// Função para chamar API de exclusão de turma
 function excluirTurmaAPI(cd_turma, callback) {
-    // Simulação de chamada à API
     $.ajax({
         url: API_URLS.EXCLUIR_TURMA,
         method: 'DELETE',
@@ -191,7 +206,6 @@ function excluirTurmaAPI(cd_turma, callback) {
     });
 }
 
-// Função para salvar turma (criar ou atualizar)
 function salvarTurma() {
     if (!validarFormulario()) {
         return;
@@ -203,16 +217,13 @@ function salvarTurma() {
         nr_periodo: parseInt($('#nr_periodo').val())
     };
 
-    // Mostrar loading
     $('#btnSalvarTurma').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Salvando...');
 
     if (cd_turma) {
-        // Editar turma existente via API
         editarTurmaAPI(cd_turma, dados, function(sucesso, mensagem) {
             $('#btnSalvarTurma').prop('disabled', false).html('Salvar');
             
             if (sucesso) {
-                // Recarrega as turmas da API após edição
                 carregarTodasTurmas();
                 $('#modalTurma').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
@@ -221,12 +232,10 @@ function salvarTurma() {
             }
         });
     } else {
-        // Incluir nova turma via API
         incluirTurmaAPI(dados, function(sucesso, mensagem) {
             $('#btnSalvarTurma').prop('disabled', false).html('Salvar');
             
             if (sucesso) {
-                // Recarrega as turmas da API após inclusão
                 carregarTodasTurmas();
                 $('#modalTurma').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
@@ -237,7 +246,6 @@ function salvarTurma() {
     }
 }
 
-// Função para preparar exclusão de turma
 function prepararExclusaoTurma(cd_turma) {
     const turma = $.grep(turmas, function(t) { return t.cd_turma === cd_turma; })[0];
     if (!turma) return;
@@ -250,19 +258,15 @@ function prepararExclusaoTurma(cd_turma) {
     $('#modalConfirmacaoExclusao').modal('show');
 }
 
-// Função para confirmar exclusão de turma
 function confirmarExclusaoTurma() {
     if (!turmaParaExcluir) return;
 
-    // Mostrar loading
     $('#btnConfirmarExclusao').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Excluindo...');
 
-    // Chamar API de exclusão
     excluirTurmaAPI(turmaParaExcluir, function(sucesso, mensagem) {
         $('#btnConfirmarExclusao').prop('disabled', false).html('Excluir');
         
         if (sucesso) {
-            // Recarrega as turmas da API após exclusão
             carregarTodasTurmas();
             $('#modalConfirmacaoExclusao').modal('hide');
             mostrarMensagem(mensagem, 'Sucesso');
@@ -274,7 +278,6 @@ function confirmarExclusaoTurma() {
     });
 }
 
-// Função para mostrar mensagem em modal
 function mostrarMensagem(mensagem, titulo = 'Mensagem') {
     $('#modalMensagemLabel').text(titulo);
     $('#mensagemConteudo').text(mensagem);
@@ -290,6 +293,17 @@ $(document).ready(function() {
     $('#btnSalvarTurma').on('click', salvarTurma);
     $('#btnNovaTurma').on('click', novaTurma);
     $('#btnConfirmarExclusao').on('click', confirmarExclusaoTurma);
+    
+    // Event listeners para o filtro
+    $('#btnBuscar').on('click', aplicarFiltro);
+    $('#btnLimparBusca').on('click', limparFiltro);
+    
+    // Buscar ao pressionar Enter no campo de filtro
+    $('#filtroDescricao').on('keypress', function(e) {
+        if (e.which === 13) {
+            aplicarFiltro();
+        }
+    });
     
     // Event delegation para botões de edição e exclusão na tabela
     $('#tabelaTurmas').on('click', '.btn-editar', function() {

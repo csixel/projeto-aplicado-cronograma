@@ -121,26 +121,21 @@
                     </button>
                 </div>
 
-<<<<<<< HEAD
-                <!-- Filtros -->
-                <div class="filtros-container card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Filtros</h5>
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="filtroDescricao" class="form-label">Buscar por Descrição</label>
-                                <input type="text" class="form-control" id="filtroDescricao" placeholder="Digite parte da descrição da disciplina...">
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <button class="btn btn-primary" id="btnFiltrar">Filtrar</button>
-                            <button class="btn btn-outline-secondary" id="btnLimparFiltros">Limpar Filtros</button>
+                <!-- Filtro de Busca por Descrição -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="filtroDescricao" placeholder="Buscar por descrição da disciplina...">
+                            <button class="btn btn-outline-secondary" type="button" id="btnFiltrar">
+                                <i class="bi bi-search"></i> Buscar
+                            </button>
+                            <button class="btn btn-outline-secondary" type="button" id="btnLimparFiltros">
+                                <i class="bi bi-x-circle"></i> Limpar
+                            </button>
                         </div>
                     </div>
                 </div>
 
-=======
->>>>>>> 0b58073 (ajustando os retornos de api para uma pasta própria)
                 <!-- Spinner de Carregamento -->
                 <div id="loading-spinner" class="loading-spinner">
                     <div class="spinner-border text-primary" role="status">
