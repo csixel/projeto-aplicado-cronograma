@@ -1,0 +1,11 @@
+para criar um aluno o backend você precisa enviar os dados dessa forma
+{
+  "ds_nome": "Rafael Almeida",
+  "ds_email": "rafael.almeida@example.com",
+  "ds_senha": "SenhaForte!2025",
+  "cpf": "12345678909",
+  "ds_telefone": "5548999123456"
+}
+http://localhost:3000/aluno/criarAluno  
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
