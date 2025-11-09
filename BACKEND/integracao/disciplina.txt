@@ -20,4 +20,10 @@ para buscar disciplinas cadastradas pelo nome (caixinha de pesquisa sem utilizar
 http://localhost:3000/disciplina/buscarDisciplinaPeloNome/?q=ana  << informando o parâmetro da buscar no cabeçalho
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
-
+para modificar uma disciplina cadastrada
+http://localhost:3000/disciplina/alterarDisciplina/nome da disciplina aqui
+{
+  "ds_disciplina": "Matemática II"
+}
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
