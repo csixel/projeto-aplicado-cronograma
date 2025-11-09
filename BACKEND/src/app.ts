@@ -5,6 +5,7 @@ import { AppDataSource } from "./data-source/data-source";
 import professorRouter from "./routes/ProfessorRoutes";
 import disciplinaRouter from "./routes/DisciplinaRoutes";
 import alunoRouter from "./routes/AlunoRoutes";
+import salaRouter from "./routes/SalaRoutes";
 
 const app = express();
 app.use(cors());
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use("/professor",professorRouter);
 app.use("/disciplina",disciplinaRouter);
 app.use("/aluno",alunoRouter);
+app.use("/sala",salaRouter);
 
 
 AppDataSource.initialize()

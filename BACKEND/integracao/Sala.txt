@@ -1,0 +1,9 @@
+para criar um sala o backend você precisa enviar os dados dessa forma
+{
+  "ds_sala_aula": "Laboratório 02",
+  "nr_alunos_maximo": 30
+}
+http://localhost:3000/sala/criarSala
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
