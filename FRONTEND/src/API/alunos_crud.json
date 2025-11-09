@@ -1,0 +1,58 @@
+[
+  {
+    "cd_aluno": 1,
+    "ds_nome": "Pedro Henrique Oliveira",
+    "ds_email": "pedro.oliveira@escola.com",
+    "ds_telefone": "(11) 9 9999-8888",
+    "ds_cpf": "123.456.789-00"
+  },
+  {
+    "cd_aluno": 2,
+    "ds_nome": "Ana Carolina Silva",
+    "ds_email": "ana.silva@escola.com",
+    "ds_telefone": "(11) 9 8888-7777",
+    "ds_cpf": "987.654.321-00"
+  },
+  {
+    "cd_aluno": 3,
+    "ds_nome": "Lucas Mendes Santos",
+    "ds_email": "lucas.santos@escola.com",
+    "ds_telefone": "(11) 9 7777-6666",
+    "ds_cpf": "456.789.123-00"
+  },
+  {
+    "cd_aluno": 4,
+    "ds_nome": "Mariana Costa Pereira",
+    "ds_email": "mariana.pereira@escola.com",
+    "ds_telefone": "(11) 9 6666-5555",
+    "ds_cpf": "789.123.456-00"
+  },
+  {
+    "cd_aluno": 5,
+    "ds_nome": "Rafael Almeida Souza",
+    "ds_email": "rafael.souza@escola.com",
+    "ds_telefone": "(11) 9 5555-4444",
+    "ds_cpf": "321.654.987-00"
+  },
+  {
+    "cd_aluno": 6,
+    "ds_nome": "Juliana Rodrigues Lima",
+    "ds_email": "juliana.lima@escola.com",
+    "ds_telefone": "(11) 9 4444-3333",
+    "ds_cpf": "654.987.321-00"
+  },
+  {
+    "cd_aluno": 7,
+    "ds_nome": "Bruno Carvalho Martins",
+    "ds_email": "bruno.martins@escola.com",
+    "ds_telefone": "(11) 9 3333-2222",
+    "ds_cpf": "147.258.369-00"
+  },
+  {
+    "cd_aluno": 8,
+    "ds_nome": "Camila Fernandes Rocha",
+    "ds_email": "camila.rocha@escola.com",
+    "ds_telefone": "(11) 9 2222-1111",
+    "ds_cpf": "258.369.147-00"
+  }
+]
