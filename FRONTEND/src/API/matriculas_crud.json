@@ -1,0 +1,47 @@
+[
+  {
+    "cd_matricula": 1,
+    "cd_aluno": 1,
+    "ds_nome_aluno": "Pedro Henrique Oliveira",
+    "ds_cpf_aluno": "123.456.789-00",
+    "cd_turma": 1,
+    "ds_turma": "1º Ano A - Manhã",
+    "nr_matricula": 2024001
+  },
+  {
+    "cd_matricula": 2,
+    "cd_aluno": 2,
+    "ds_nome_aluno": "Ana Carolina Silva",
+    "ds_cpf_aluno": "987.654.321-00",
+    "cd_turma": 1,
+    "ds_turma": "1º Ano A - Manhã",
+    "nr_matricula": 2024002
+  },
+  {
+    "cd_matricula": 3,
+    "cd_aluno": 3,
+    "ds_nome_aluno": "Lucas Mendes Santos",
+    "ds_cpf_aluno": "456.789.123-00",
+    "cd_turma": 2,
+    "ds_turma": "2º Ano B - Tarde",
+    "nr_matricula": 2024003
+  },
+  {
+    "cd_matricula": 4,
+    "cd_aluno": 4,
+    "ds_nome_aluno": "Mariana Costa Pereira",
+    "ds_cpf_aluno": "789.123.456-00",
+    "cd_turma": 2,
+    "ds_turma": "2º Ano B - Tarde",
+    "nr_matricula": 2024004
+  },
+  {
+    "cd_matricula": 5,
+    "cd_aluno": 5,
+    "ds_nome_aluno": "Rafael Almeida Souza",
+    "ds_cpf_aluno": "321.654.987-00",
+    "cd_turma": 3,
+    "ds_turma": "3º Ano C - Noite",
+    "nr_matricula": 2024005
+  }
+]
