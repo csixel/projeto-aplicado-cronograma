@@ -27,3 +27,30 @@ http://localhost:3000/disciplina/alterarDisciplina/nome da disciplina aqui
 }
 -----------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------
+
+
+************** SUGESTÕES CAMILA **************
+
+para deletar uma discplina o backend você precisa enviar os dados dessa forma 
+{
+  "cd_disciplina": 13, <<< inteiro
+}
+rota da API http://localhost:3000/disciplina/deletarDisciplina
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+
+para modificar uma disciplina cadastrada
+http://localhost:3000/disciplina/alterarDisciplina/código da disciplina aqui
+{
+  "ds_disciplina": "Matemática II"
+}
+
+Ex.: 
+http://localhost:3000/disciplina/alterarDisciplina/13
+{
+  "ds_disciplina": "Matemática Aplicada"
+}
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------

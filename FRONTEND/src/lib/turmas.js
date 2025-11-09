@@ -9,7 +9,7 @@ let filtroAtual = '';
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_TURMAS: 'turmas_crud.json',
+    LISTAR_TURMAS: '../API/turmas_crud.json',
     EXCLUIR_TURMA: 'api/turmas/excluir',
     EDITAR_TURMA: 'api/turmas/editar',
     INCLUIR_TURMA: 'api/turmas/incluir'

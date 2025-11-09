@@ -6,7 +6,7 @@ let professorParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_PROFESSORES: 'professores_crud.json',
+    LISTAR_PROFESSORES: '../API/professores_crud.json',
     EXCLUIR_PROFESSOR: 'api/professores/excluir',
     EDITAR_PROFESSOR: 'api/professores/editar',
     INCLUIR_PROFESSOR: 'api/professores/incluir'

@@ -6,7 +6,7 @@ let salaParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_SALAS: 'salas_crud.json',
+    LISTAR_SALAS: '../API/salas_crud.json',
     EXCLUIR_SALA: 'api/salas/excluir',
     EDITAR_SALA: 'api/salas/editar',
     INCLUIR_SALA: 'api/salas/incluir'

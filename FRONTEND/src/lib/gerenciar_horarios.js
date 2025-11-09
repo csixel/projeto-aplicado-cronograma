@@ -10,7 +10,7 @@ let horarioParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_HORARIOS: 'lista_horarios.json',
+    LISTAR_HORARIOS: '../API/lista_horarios.json',
     EXCLUIR_HORARIO: 'api/horarios/excluir',
     EDITAR_HORARIO: 'api/horarios/editar',
     INCLUIR_HORARIO: 'api/horarios/incluir'
@@ -71,28 +71,28 @@ function carregarTodosDados() {
     $('#loading-spinner').show();
     
     // Carrega disciplinas
-    carregarDadosAPI('disciplinas.json', function(data) {
+    carregarDadosAPI('../API/disciplinas.json', function(data) {
         disciplinas = data;
         preencherSelect('#filtroDisciplina', data, 'cd_disciplina', 'ds_disciplina');
         preencherSelect('#cd_disciplina', data, 'cd_disciplina', 'ds_disciplina');
     });
     
     // Carrega professores
-    carregarDadosAPI('professores.json', function(data) {
+    carregarDadosAPI('../API/professores.json', function(data) {
         professores = data;
         preencherSelect('#filtroProfessor', data, 'cd_professor', 'ds_nome');
         preencherSelect('#cd_professor', data, 'cd_professor', 'ds_nome');
     });
     
     // Carrega salas
-    carregarDadosAPI('salas.json', function(data) {
+    carregarDadosAPI('../API/salas.json', function(data) {
         salas = data;
         preencherSelect('#filtroSala', data, 'cd_sala_aula', 'ds_sala_aula');
         preencherSelect('#cd_sala_aula', data, 'cd_sala_aula', 'ds_sala_aula');
     });
     
     // Carrega turmas
-    carregarDadosAPI('turmas.json', function(data) {
+    carregarDadosAPI('../API/turmas.json', function(data) {
         turmas = data;
         preencherSelect('#filtroTurma', data, 'cd_turma', 'ds_turma');
         preencherSelect('#cd_turma', data, 'cd_turma', 'ds_turma');

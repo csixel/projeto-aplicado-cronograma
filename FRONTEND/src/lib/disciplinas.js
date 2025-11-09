@@ -6,7 +6,7 @@ let disciplinaParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_DISCIPLINAS: 'disciplinas_crud.json',
+    LISTAR_DISCIPLINAS: '../API/disciplinas_crud.json',
     EXCLUIR_DISCIPLINA: 'api/disciplinas/excluir',
     EDITAR_DISCIPLINA: 'api/disciplinas/editar',
     INCLUIR_DISCIPLINA: 'api/disciplinas/incluir'
