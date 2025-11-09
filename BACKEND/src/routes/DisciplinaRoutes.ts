@@ -7,4 +7,5 @@ const disciplinaController = new DisciplinaController();
 disciplinaRouter.post("/criarDisciplina", disciplinaController.criarDisciplina.bind(disciplinaController));
 disciplinaRouter.delete("/deletarDisciplina", disciplinaController.deletarDisciplina.bind(disciplinaController));
 disciplinaRouter.get("/buscarTodasDisciplinas", disciplinaController.BuscarTodosDisciplinas.bind(disciplinaController));
+disciplinaRouter.get("/buscarDisciplinaPeloNome", disciplinaController.buscarDisiplinaPeloNome.bind(disciplinaController));
 export default disciplinaRouter;

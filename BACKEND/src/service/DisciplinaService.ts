@@ -1,6 +1,7 @@
 import { AppDataSource } from "../data-source/data-source";
 import { Disciplina } from "../entity/Disciplina";
 import { CreateDisciplina } from "../interfaces/CreateDisciplina";
+import { Like } from "typeorm";
 
 export class DisciplinaService {
   private disciplinaRepository = AppDataSource.getRepository(Disciplina);
@@ -27,9 +28,32 @@ export class DisciplinaService {
     await this.disciplinaRepository.remove(disciplina);
     return disciplina;
   }
-  
+
   async BuscarTodosDisciplinas() {
     const disciplinas = await this.disciplinaRepository.find();
     return disciplinas;
+  }
+
+  async buscarDisiplinaPeloNome(term: string, page = 1, pageSize = 10) {
+    const q = (term ?? '').trim();
+  if (q.length < 2) return []; // evita varredura com 1 caractere
+
+  return this.disciplinaRepository.find({
+    where: { ds_disciplina: Like(`${q}%`) }, 
+    order: { ds_disciplina: 'ASC' },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+  });
+  }
+
+  async alterarDisciplina(ds_disciplina: string, dadosAtualizados: Partial<CreateDisciplina>){
+    const buscarDisciplina = await this.disciplinaRepository.findOne({ where: { ds_disciplina } });
+    if (!buscarDisciplina) {
+      throw new Error("Disciplina não encontrada")
+    }
+    Object.assign(buscarDisciplina, dadosAtualizados);
+    const disciplinaAtualizada = await this.disciplinaRepository.save(buscarDisciplina);
+    console.log("modificação realizada com sucesso")
+    return disciplinaAtualizada
   }
 }
