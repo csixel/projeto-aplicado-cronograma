@@ -1,0 +1,18 @@
+para criar uma discplina o backend você precisa enviar os dados dessa forma 
+{
+  "ds_disciplina": "anan", <<< string
+}
+rota da API http://localhost:3000/disciplina/criarDisciplina
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para deletar uma discplina o backend você precisa enviar os dados dessa forma 
+{
+  "ds_disciplina": "anan", <<< string
+}
+rota da API http://localhost:3000/disciplina/deletarDisciplina
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para buscar todas as disciplinas cadastradas você deve dar um get nesta rota aqui 
+http://localhost:3000/disciplina/buscarTodasDisciplinas
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------

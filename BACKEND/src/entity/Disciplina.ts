@@ -3,14 +3,8 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 @Entity()
 export class Disciplina {
     @PrimaryGeneratedColumn()
-    id_disciplina!: number
-    
-    @Column()
-    nome!: string
-     
-    @Column()
-    descricao!: string
+    cd_disciplina!: number
 
     @Column()
-    carga_horaria!: number
+    ds_disciplina!: string
 }
