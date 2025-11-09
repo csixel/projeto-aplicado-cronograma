@@ -34,7 +34,7 @@ export class DisciplinaService {
     return disciplinas;
   }
 
-  async buscarDisiplinaPeloNome(term: string, page = 1, pageSize = 10) {
+  async buscarDisiplinaPeloNome(term: string, page = 1, pageSize = 50) {
     const q = (term ?? '').trim();
   if (q.length < 2) return []; // evita varredura com 1 caractere
 
