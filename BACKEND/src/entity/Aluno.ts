@@ -1,22 +1,23 @@
 import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
 @Entity()
-export class Professor {
+export class Aluno {
     @PrimaryGeneratedColumn()
-    cd_professor!: number
+    cd_aluno!: number
 
     @Column({type: "varchar", length: 100})
     ds_nome!: string
 
     @Column({type: "varchar", length: 100, unique: true})
     ds_email!: string
-
-    @Column()
-    ds_disciplina!: string
-
-    @Column({type: "varchar", length: 15, unique: true})
-    ds_telefone!: string
+    
+    @Column({type: "varchar", length: 255})
+    ds_senha!: string
 
     @Column({type: "varchar", length: 14, unique: true})
-    ds_cpf!: string
+    cpf!: string
+
+    @Column({type: "varchar", length: 15})
+    ds_telefone!: string
+
 }
