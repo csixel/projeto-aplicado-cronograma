@@ -18,9 +18,9 @@ export class DisciplinaService {
     return novaDisciplina;
   }
 
-  async deletarDisciplina(ds_disciplina: string) {
+  async deletarDisciplina(cd_disciplina: number) {
     const disciplina = await this.disciplinaRepository.findOne({
-      where: { ds_disciplina },
+      where: { cd_disciplina },
     });
     if (!disciplina) {
       throw new Error("Disciplina não encontrada");
@@ -34,20 +34,20 @@ export class DisciplinaService {
     return disciplinas;
   }
 
-  async buscarDisiplinaPeloNome(term: string, page = 1, pageSize = 10) {
+  async buscarDisciplina(term: string, page = 1, pageSize = 10) {
     const q = (term ?? '').trim();
-  if (q.length < 2) return []; // evita varredura com 1 caractere
+    if (q.length == 1) return []; // evita varredura com 1 caractere
 
-  return this.disciplinaRepository.find({
-    where: { ds_disciplina: Like(`${q}%`) }, 
-    order: { ds_disciplina: 'ASC' },
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-  });
+    return this.disciplinaRepository.find({
+      where: q ? { ds_disciplina: Like(`%${q}%`) } : {}, 
+      order: { ds_disciplina: 'ASC' },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
   }
 
-  async alterarDisciplina(ds_disciplina: string, dadosAtualizados: Partial<CreateDisciplina>){
-    const buscarDisciplina = await this.disciplinaRepository.findOne({ where: { ds_disciplina } });
+  async alterarDisciplina(cd_disciplina: number, dadosAtualizados: Partial<CreateDisciplina>){
+    const buscarDisciplina = await this.disciplinaRepository.findOne({ where: { cd_disciplina } });
     if (!buscarDisciplina) {
       throw new Error("Disciplina não encontrada")
     }

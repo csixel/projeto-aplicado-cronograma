@@ -16,22 +16,26 @@ export class DisciplinaController {
       );
       res.status(201).json(novaDisciplina);
     } catch (error) {
-      res.status(500).json({ message: "Erro ao criar disciplina" });
+      // normalize unknown error to message
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(500).json({ message: message || "Erro ao criar disciplina" });
     }
   }
 
   async deletarDisciplina(
-    req: Request<{ ds_disciplina: string }>,
+    req: Request<{ cd_disciplina: number }>,
     res: Response
   ) {
     try {
-      const { ds_disciplina } = req.params;
+      const { cd_disciplina } = req.params;
       const disciplina = await this.disciplinaService.deletarDisciplina(
-        ds_disciplina
+        cd_disciplina
       );
       res.status(200).json(disciplina);
     } catch (error) {
-      res.status(500).json({ message: "Erro ao deletar disciplina" });
+      // normalize unknown error to message
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(500).json({ message: message || "Erro ao deletar disciplina" });
     }
   }
 
@@ -43,7 +47,8 @@ export class DisciplinaController {
       res.status(500).json({ message: "Erro ao buscar todas as disciplinas" });
     }
   }
-  async buscarDisiplinaPeloNome(req: Request, res: Response) {
+
+  async buscarDisciplina(req: Request, res: Response) {
     try {
       const q = String(req.query.q ?? "").trim();
       const page = Math.max(
@@ -55,13 +60,13 @@ export class DisciplinaController {
         100
       );
 
-      if (q.length < 2) {
+      if (q.length == 1) {
         return res
           .status(400)
-          .json({ message: "Informe ao menos 2 caracteres para buscar." });
+          .json({ message: "Informe ao menos 1 caracteres para buscar." });
       }
 
-      const data = await this.disciplinaService.buscarDisiplinaPeloNome(
+      const data = await this.disciplinaService.buscarDisciplina(
         q,
         page,
         pageSize
@@ -72,15 +77,16 @@ export class DisciplinaController {
     }
   }
 
-  async alterarDisciplina(req: Request<{ ds_disciplina: string }, unknown, Partial<CreateDisciplina>>, res: Response) {
+  async alterarDisciplina(req: Request<{ cd_disciplina: number }, unknown, Partial<CreateDisciplina>>, res: Response) {
     try {
-      const { ds_disciplina } = req.params;
-      console.log(ds_disciplina)
+      const { cd_disciplina } = req.params;
       const dadosAtualizados = req.body;
-      const novaDisciplina = await this.disciplinaService.alterarDisciplina(ds_disciplina, dadosAtualizados);
+      const novaDisciplina = await this.disciplinaService.alterarDisciplina(cd_disciplina, dadosAtualizados);
       res.status(200).json(novaDisciplina);
     } catch (error) {
-      res.status(500).json({ message: "Erro ao atualizar disciplina" });
+      // normalize unknown error to message
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(500).json({ message: message || "Erro ao atualizar disciplina" });
     }
   }
 }

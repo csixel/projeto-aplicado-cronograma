@@ -6,28 +6,31 @@ let disciplinaParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_DISCIPLINAS: '../API/disciplinas_crud.json',
-    EXCLUIR_DISCIPLINA: 'api/disciplinas/excluir',
-    EDITAR_DISCIPLINA: 'api/disciplinas/editar',
-    INCLUIR_DISCIPLINA: 'api/disciplinas/incluir'
+    LISTAR_DISCIPLINAS: 'http://localhost:3000/disciplina/buscarDisciplina/',
+    EXCLUIR_DISCIPLINA: 'http://localhost:3000/disciplina/deletarDisciplina/',
+    EDITAR_DISCIPLINA: 'http://localhost:3000/disciplina/alterarDisciplina/',
+    INCLUIR_DISCIPLINA: 'http://localhost:3000/disciplina/criarDisciplina'
 };
 
 // Função para carregar disciplinas da API
-function carregarDisciplinasAPI(filtros = {}, callback) {
+function carregarDisciplinasAPI(filtros = '', callback) {
+
     // Simulação de chamada à API com filtros
     // Na implementação real, os filtros seriam enviados como parâmetros
     $.ajax({
-        url: API_URLS.LISTAR_DISCIPLINAS,
+        url: API_URLS.LISTAR_DISCIPLINAS + (filtros ? '?q=' + filtros : ''),
         method: 'GET',
         dataType: 'json',
-        data: filtros, // Envia os filtros como parâmetros
         success: function(response) {
             callback(response);
         },
         error: function(xhr, status, error) {
-            console.error('Erro ao carregar disciplinas:', error);
-            mostrarMensagem('Erro ao carregar disciplinas da API', 'Erro');
-            callback([]);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            mostrarMensagem(mensagem, 'Erro');
+            callback({data: []});
         }
     });
 }
@@ -39,7 +42,7 @@ function carregarDisciplinasComFiltros() {
     const filtros = obterFiltros();
     
     carregarDisciplinasAPI(filtros, function(data) {
-        disciplinas = data;
+        disciplinas = data.data;
         carregarTabelaDisciplinas();
         $('#loading-spinner').hide();
     });
@@ -49,13 +52,11 @@ function carregarDisciplinasComFiltros() {
 function obterFiltros() {
     const filtroDescricao = $('#filtroDescricao').val().trim();
     
-    const filtros = {};
-    
     if (filtroDescricao) {
-        filtros.ds_disciplina = filtroDescricao;
+        return filtroDescricao;
     }
     
-    return filtros;
+    return '';
 }
 
 // Função para carregar a tabela com as disciplinas
@@ -168,12 +169,17 @@ function incluirDisciplinaAPI(dados, callback) {
         url: API_URLS.INCLUIR_DISCIPLINA,
         method: 'POST',
         dataType: 'json',
-        data: dados,
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Disciplina incluída com sucesso!');
+            callback(true, 'Disciplina incluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao incluir disciplina: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao incluir disciplina: ' + mensagem);
         }
     });
 }
@@ -182,15 +188,20 @@ function incluirDisciplinaAPI(dados, callback) {
 function editarDisciplinaAPI(cd_disciplina, dados, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EDITAR_DISCIPLINA,
+        url: API_URLS.EDITAR_DISCIPLINA + cd_disciplina,
         method: 'PUT',
         dataType: 'json',
-        data: { ...dados, cd_disciplina: cd_disciplina },
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Disciplina editada com sucesso!');
+            callback(true, 'Disciplina editada com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao editar disciplina: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao editar disciplina: ' + mensagem);
         }
     });
 }
@@ -199,15 +210,19 @@ function editarDisciplinaAPI(cd_disciplina, dados, callback) {
 function excluirDisciplinaAPI(cd_disciplina, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EXCLUIR_DISCIPLINA,
+        url: API_URLS.EXCLUIR_DISCIPLINA + cd_disciplina,
         method: 'DELETE',
         dataType: 'json',
-        data: { cd_disciplina: cd_disciplina },
+        contentType: 'application/json',
         success: function(response) {
-            callback(response.success, response.mensagem || 'Disciplina excluída com sucesso!');
+            callback(true, 'Disciplina excluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao excluir disciplina: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao excluir disciplina: ' + mensagem);
         }
     });
 }
