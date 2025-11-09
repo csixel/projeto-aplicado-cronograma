@@ -66,7 +66,7 @@ export class DisciplinaController {
           .json({ message: "Informe ao menos 1 caracteres para buscar." });
       }
 
-      const data = await this.disciplinaService.buscarDisiplinaPeloNome(
+      const data = await this.disciplinaService.buscarDisciplina(
         q,
         page,
         pageSize
