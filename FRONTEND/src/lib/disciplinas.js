@@ -13,11 +13,14 @@ const API_URLS = {
 };
 
 // Função para carregar disciplinas da API
-function carregarDisciplinasAPI(callback) {
+function carregarDisciplinasAPI(filtros = {}, callback) {
+    // Simulação de chamada à API com filtros
+    // Na implementação real, os filtros seriam enviados como parâmetros
     $.ajax({
         url: API_URLS.LISTAR_DISCIPLINAS,
         method: 'GET',
         dataType: 'json',
+        data: filtros, // Envia os filtros como parâmetros
         success: function(response) {
             callback(response);
         },
@@ -29,15 +32,30 @@ function carregarDisciplinasAPI(callback) {
     });
 }
 
-// Função para carregar todas as disciplinas
-function carregarTodasDisciplinas() {
+// Função para carregar disciplinas com filtros
+function carregarDisciplinasComFiltros() {
     $('#loading-spinner').show();
     
-    carregarDisciplinasAPI(function(data) {
+    const filtros = obterFiltros();
+    
+    carregarDisciplinasAPI(filtros, function(data) {
         disciplinas = data;
         carregarTabelaDisciplinas();
         $('#loading-spinner').hide();
     });
+}
+
+// Função para obter os filtros atuais
+function obterFiltros() {
+    const filtroDescricao = $('#filtroDescricao').val().trim();
+    
+    const filtros = {};
+    
+    if (filtroDescricao) {
+        filtros.ds_disciplina = filtroDescricao;
+    }
+    
+    return filtros;
 }
 
 // Função para carregar a tabela com as disciplinas
@@ -65,6 +83,17 @@ function carregarTabelaDisciplinas() {
         `);
         $tbody.append(tr);
     });
+}
+
+// Função para filtrar disciplinas
+function filtrarDisciplinas() {
+    carregarDisciplinasComFiltros();
+}
+
+// Função para limpar filtros
+function limparFiltros() {
+    $('#filtroDescricao').val('');
+    carregarDisciplinasComFiltros();
 }
 
 // Função para limpar validações do formulário
@@ -204,7 +233,7 @@ function salvarDisciplina() {
             
             if (sucesso) {
                 // Recarrega as disciplinas da API após edição
-                carregarTodasDisciplinas();
+                carregarDisciplinasComFiltros();
                 $('#modalDisciplina').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
             } else {
@@ -218,7 +247,7 @@ function salvarDisciplina() {
             
             if (sucesso) {
                 // Recarrega as disciplinas da API após inclusão
-                carregarTodasDisciplinas();
+                carregarDisciplinasComFiltros();
                 $('#modalDisciplina').modal('hide');
                 mostrarMensagem(mensagem, 'Sucesso');
             } else {
@@ -253,7 +282,7 @@ function confirmarExclusaoDisciplina() {
         
         if (sucesso) {
             // Recarrega as disciplinas da API após exclusão
-            carregarTodasDisciplinas();
+            carregarDisciplinasComFiltros();
             $('#modalConfirmacaoExclusao').modal('hide');
             mostrarMensagem(mensagem, 'Sucesso');
         } else {
@@ -274,12 +303,14 @@ function mostrarMensagem(mensagem, titulo = 'Mensagem') {
 // Inicialização quando a página carrega
 $(document).ready(function() {
     // Carrega todas as disciplinas
-    carregarTodasDisciplinas();
+    carregarDisciplinasComFiltros();
     
     // Event listeners usando jQuery
     $('#btnSalvarDisciplina').on('click', salvarDisciplina);
     $('#btnNovaDisciplina').on('click', novaDisciplina);
     $('#btnConfirmarExclusao').on('click', confirmarExclusaoDisciplina);
+    $('#btnFiltrar').on('click', filtrarDisciplinas);
+    $('#btnLimparFiltros').on('click', limparFiltros);
     
     // Event delegation para botões de edição e exclusão na tabela
     $('#tabelaDisciplinas').on('click', '.btn-editar', function() {
@@ -290,6 +321,13 @@ $(document).ready(function() {
     $('#tabelaDisciplinas').on('click', '.btn-excluir', function() {
         const cd_disciplina = parseInt($(this).data('id'));
         prepararExclusaoDisciplina(cd_disciplina);
+    });
+    
+    // Buscar ao pressionar Enter no campo de filtro
+    $('#filtroDescricao').on('keypress', function(e) {
+        if (e.which === 13) { // Enter key
+            filtrarDisciplinas();
+        }
     });
     
     // Limpar validação quando o usuário começar a digitar/corrigir
