@@ -71,4 +71,16 @@ export class DisciplinaController {
       res.status(500).json({ message: "Erro ao buscar disciplinas" });
     }
   }
+
+  async alterarDisciplina(req: Request<{ ds_disciplina: string }, unknown, Partial<CreateDisciplina>>, res: Response) {
+    try {
+      const { ds_disciplina } = req.params;
+      console.log(ds_disciplina)
+      const dadosAtualizados = req.body;
+      const novaDisciplina = await this.disciplinaService.alterarDisciplina(ds_disciplina, dadosAtualizados);
+      res.status(200).json(novaDisciplina);
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao atualizar disciplina" });
+    }
+  }
 }
