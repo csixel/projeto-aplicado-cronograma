@@ -42,7 +42,7 @@ function carregarSalasComFiltros() {
     const filtros = obterFiltros();
     
     carregarSalasAPI(filtros, function(data) {
-        salas = data.data;
+        salas = data;
         carregarTabelaSalas();
         $('#loading-spinner').hide();
     });

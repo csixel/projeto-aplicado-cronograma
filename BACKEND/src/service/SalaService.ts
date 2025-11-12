@@ -29,15 +29,13 @@ export class SalaService {
         const salas = await this.salaRepository.find();
         return salas;
     }
-    async buscarSala(term: string, page = 1, pageSize = 50) {
+    async buscarSala(term: string) {
         const q = (term ?? '').trim();
         if (q.length == 1) return []; // evita varredura com 1 caractere
     
         return this.salaRepository.find({
           where: q ? { ds_sala_aula: Like (`%${q}%`) } : {}, 
-          order: { ds_sala_aula: 'ASC' },
-          skip: (page - 1) * pageSize,
-          take: pageSize,
+          order: { ds_sala_aula: 'ASC' }
         });
     }    
     async alterarSala(cd_sala_aula: number, dadosAtualizados: Partial<CreateSala>){

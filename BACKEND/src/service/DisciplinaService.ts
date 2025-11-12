@@ -34,15 +34,13 @@ export class DisciplinaService {
     return disciplinas;
   }
 
-  async buscarDisciplina(term: string, page = 1, pageSize = 50) {
+  async buscarDisciplina(term: string) {
     const q = (term ?? '').trim();
     if (q.length == 1) return []; // evita varredura com 1 caractere
 
     return this.disciplinaRepository.find({
       where: q ? { ds_disciplina: Like(`%${q}%`) } : {}, 
-      order: { ds_disciplina: 'ASC' },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
+      order: { ds_disciplina: 'ASC' }
     });
   }
 

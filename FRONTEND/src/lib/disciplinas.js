@@ -42,7 +42,7 @@ function carregarDisciplinasComFiltros() {
     const filtros = obterFiltros();
     
     carregarDisciplinasAPI(filtros, function(data) {
-        disciplinas = data.data;
+        disciplinas = data;
         carregarTabelaDisciplinas();
         $('#loading-spinner').hide();
     });

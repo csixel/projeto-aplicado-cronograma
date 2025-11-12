@@ -40,14 +40,6 @@ export class SalaController{
     async buscarSala(req: Request, res: Response) {
     try {
       const q = String(req.query.q ?? "").trim();
-      const page = Math.max(
-        parseInt(String(req.query.page ?? "1"), 10) || 1,
-        1
-      );
-      const pageSize = Math.min(
-        Math.max(parseInt(String(req.query.pageSize ?? "10"), 10) || 10, 1),
-        100
-      );
 
       if (q.length == 1) {
         return res
@@ -56,11 +48,9 @@ export class SalaController{
       }
 
       const data = await this.salaService.buscarSala(
-        q,
-        page,
-        pageSize
+        q
       );
-      return res.json({ data, page, pageSize, count: data.length });
+      return res.json(data);
     } catch (error) {
       res.status(500).json({ message: "Erro ao buscar salas" });
     }
