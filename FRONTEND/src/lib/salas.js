@@ -6,28 +6,31 @@ let salaParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_SALAS: '../API/salas_crud.json',
-    EXCLUIR_SALA: 'api/salas/excluir',
-    EDITAR_SALA: 'api/salas/editar',
-    INCLUIR_SALA: 'api/salas/incluir'
+    LISTAR_SALAS: 'http://localhost:3000/sala/buscarSala/',
+    EXCLUIR_SALA: 'http://localhost:3000/sala/deletarSala/',
+    EDITAR_SALA: 'http://localhost:3000/sala/alterarSala/',
+    INCLUIR_SALA: 'http://localhost:3000/sala/criarSala'
 };
 
 // Função para carregar salas da API
-function carregarSalasAPI(filtros = {}, callback) {
+function carregarSalasAPI(filtros = '', callback) {
+
     // Simulação de chamada à API com filtros
     // Na implementação real, os filtros seriam enviados como parâmetros
     $.ajax({
-        url: API_URLS.LISTAR_SALAS,
+        url: API_URLS.LISTAR_SALAS + (filtros ? '?q=' + filtros : ''),
         method: 'GET',
         dataType: 'json',
-        data: filtros, // Envia os filtros como parâmetros
         success: function(response) {
             callback(response);
         },
         error: function(xhr, status, error) {
-            console.error('Erro ao carregar salas:', error);
-            mostrarMensagem('Erro ao carregar salas da API', 'Erro');
-            callback([]);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            mostrarMensagem(mensagem, 'Erro');
+            callback({data: []});
         }
     });
 }
@@ -39,7 +42,7 @@ function carregarSalasComFiltros() {
     const filtros = obterFiltros();
     
     carregarSalasAPI(filtros, function(data) {
-        salas = data;
+        salas = data.data;
         carregarTabelaSalas();
         $('#loading-spinner').hide();
     });
@@ -49,13 +52,11 @@ function carregarSalasComFiltros() {
 function obterFiltros() {
     const filtroDescricao = $('#filtroDescricao').val().trim();
     
-    const filtros = {};
-    
     if (filtroDescricao) {
-        filtros.ds_sala_aula = filtroDescricao;
+        return filtroDescricao;
     }
     
-    return filtros;
+    return '';
 }
 
 // Função para carregar a tabela com as salas
@@ -163,6 +164,7 @@ function editarSala(cd_sala_aula) {
     $('#modalSala').modal('show');
 }
 
+
 // Função para chamar API de inclusão de sala
 function incluirSalaAPI(dados, callback) {
     // Simulação de chamada à API
@@ -170,12 +172,17 @@ function incluirSalaAPI(dados, callback) {
         url: API_URLS.INCLUIR_SALA,
         method: 'POST',
         dataType: 'json',
-        data: dados,
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Sala incluída com sucesso!');
+            callback(true, 'Sala incluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao incluir sala: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao incluir sala: ' + mensagem);
         }
     });
 }
@@ -184,15 +191,20 @@ function incluirSalaAPI(dados, callback) {
 function editarSalaAPI(cd_sala_aula, dados, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EDITAR_SALA,
+        url: API_URLS.EDITAR_SALA + cd_sala_aula,
         method: 'PUT',
         dataType: 'json',
-        data: { ...dados, cd_sala_aula: cd_sala_aula },
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Sala editada com sucesso!');
+            callback(true, 'Sala editada com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao editar sala: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao editar sala: ' + mensagem);
         }
     });
 }
@@ -201,15 +213,19 @@ function editarSalaAPI(cd_sala_aula, dados, callback) {
 function excluirSalaAPI(cd_sala_aula, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EXCLUIR_SALA,
+        url: API_URLS.EXCLUIR_SALA + cd_sala_aula,
         method: 'DELETE',
         dataType: 'json',
-        data: { cd_sala_aula: cd_sala_aula },
+        contentType: 'application/json',
         success: function(response) {
-            callback(response.success, response.mensagem || 'Sala excluída com sucesso!');
+            callback(true, 'Sala excluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao excluir sala: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao excluir sala: ' + mensagem);
         }
     });
 }

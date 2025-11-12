@@ -1,6 +1,7 @@
 import { AppDataSource } from "../data-source/data-source";
 import { Sala } from "../entity/Sala";
 import { CreateSala } from "../interfaces/CreateSala";
+import { Like } from "typeorm";
 
 export class SalaService {
     private salaRepository = AppDataSource.getRepository(Sala);
@@ -28,14 +29,17 @@ export class SalaService {
         const salas = await this.salaRepository.find();
         return salas;
     }
-    async BuscarSalaPeloCd (cd_sala_aula: number) {
-        const sala = await this.salaRepository.findOne({ where: { cd_sala_aula } });
-        if (!sala) {
-            throw new Error("Sala não encontrada");
-        }
-        return sala;
+    async buscarSala(term: string, page = 1, pageSize = 50) {
+        const q = (term ?? '').trim();
+        if (q.length == 1) return []; // evita varredura com 1 caractere
     
-    }
+        return this.salaRepository.find({
+          where: q ? { ds_sala_aula: Like (`%${q}%`) } : {}, 
+          order: { ds_sala_aula: 'ASC' },
+          skip: (page - 1) * pageSize,
+          take: pageSize,
+        });
+    }    
     async alterarSala(cd_sala_aula: number, dadosAtualizados: Partial<CreateSala>){
         const buscarSala = await this.salaRepository.findOne({ where: { cd_sala_aula } });
         if (!buscarSala) {
