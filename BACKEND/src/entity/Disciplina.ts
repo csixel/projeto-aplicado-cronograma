@@ -11,11 +11,11 @@ export class Disciplina {
   @Column()
   ds_disciplina!: string;
 
-  // DISCIPLINAS → HORARIOS (1:N)
+  
   @OneToMany(() => Horario, (horario: Horario) => horario.disciplina)
   horarios!: Horario[];
 
-  // DISCIPLINAS → MATRICULA_DISCIPLINAS (1:N)
+  
   @OneToMany(
     () => MatriculaDisciplina,
     (md: MatriculaDisciplina) => md.disciplina

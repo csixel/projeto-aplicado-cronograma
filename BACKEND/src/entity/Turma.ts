@@ -15,11 +15,11 @@ export class Turma {
     @Column({type: "int"})
     nr_periodos!: number
 
-    // TURMAS → MATRICULAS (1:N)
+    
   @OneToMany(() => Matricula, (matricula: Matricula) => matricula.turma)
   matriculas!: Matricula[];
 
-  // TURMAS → HORARIOS (1:N)
+  
   @OneToMany(() => Horario, (horario: Horario) => horario.turma)
   horarios!: Horario[];
 
