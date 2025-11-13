@@ -6,6 +6,8 @@ import professorRouter from "./routes/ProfessorRoutes";
 import disciplinaRouter from "./routes/DisciplinaRoutes";
 import alunoRouter from "./routes/AlunoRoutes";
 import salaRouter from "./routes/SalaRoutes";
+import turmaRouter from "./routes/TurmaRoutes";
+import horarioRouter from "./routes/HorarioRoutes";
 
 const app = express();
 app.use(cors());
@@ -15,6 +17,8 @@ app.use("/professor",professorRouter);
 app.use("/disciplina",disciplinaRouter);
 app.use("/aluno",alunoRouter);
 app.use("/sala",salaRouter);
+app.use("/turma",turmaRouter);
+app.use("/horario",horarioRouter);
 
 
 AppDataSource.initialize()

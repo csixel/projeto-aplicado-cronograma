@@ -1,0 +1,48 @@
+para criar um horário o backend você precisa enviar os dados dessa forma
+{
+  "ds_horario": "Aula de Português - Professor Carlos",
+  "cd_turma": 1,
+  "cd_sala_aula": 1,
+  "cd_professor": 1,
+  "cd_disciplina": 1,
+  "dt_inicio": "2024-01-01",
+  "dt_fim": "2024-12-31"
+}
+http://localhost:3000/horario/criarHorario
+IMPORTANTE: Para criar um horário, você precisa ter cadastrado previamente:
+- Um professor (cd_professor)
+- Uma disciplina (cd_disciplina)
+- Uma turma (cd_turma)
+- Uma sala (cd_sala_aula)
+As datas (dt_inicio e dt_fim) devem estar no formato YYYY-MM-DD
+Para o horário estar ativo, a data atual deve estar entre dt_inicio e dt_fim
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para deletar um horário o backend você precisa enviar os dados dessa forma
+http://localhost:3000/horario/deletarHorario/ <<<< aqui você deve informar o cd_horario (ID do horário) que vai ser deletado
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para buscar todos os horários cadastrados você deve dar um get nesta rota aqui 
+http://localhost:3000/horario/buscarTodosHorarios
+Esta rota retorna os horários com todas as informações relacionadas (professor, disciplina, turma, sala)
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para buscar um horário cadastrado pelo ID você deve dar um get nesta rota aqui 
+http://localhost:3000/horario/buscarHorarioPorId/ <<<< aqui você deve informar o cd_horario (ID do horário)
+Esta rota retorna o horário com todas as informações relacionadas (professor, disciplina, turma, sala)
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para modificar um horário cadastrado deverá ser utilizada essa rota aqui
+http://localhost:3000/horario/alterarHorario/ <<<< aqui deverá ser preenchido o cd_horario (ID do horário) que é o identificador único
+{
+  "ds_horario": "Aula de Matemática - Professor João",
+  "cd_turma": 2,
+  "cd_sala_aula": 2,
+  "cd_professor": 2,
+  "cd_disciplina": 2,
+  "dt_inicio": "2024-02-01",
+  "dt_fim": "2024-11-30"
+}
+forma de envio deve conter os campos que deseja alterar (todos os campos são opcionais, mas se informar cd_professor, cd_disciplina, cd_turma ou cd_sala_aula, eles devem existir no banco)
+IMPORTANTE: Se você alterar cd_professor, cd_disciplina, cd_turma ou cd_sala_aula, o sistema verifica se esses IDs existem antes de atualizar
+

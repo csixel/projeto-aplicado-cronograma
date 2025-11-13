@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm"
+import { Horario } from "./Horario"
 
 @Entity()
 export class Sala {
@@ -10,4 +11,7 @@ export class Sala {
 
     @Column({type: "int"})
     nr_alunos_maximo!: number
+
+    @OneToMany(() => Horario, (horario: Horario) => horario.sala)
+  horarios!: Horario[];
 }

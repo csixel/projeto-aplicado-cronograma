@@ -9,7 +9,9 @@ export class ProfessorController {
         try {
             const professor = req.body;
             const novoProfessor = await this.professorService.criarProfessor(professor);
+            console.log(professor)
             res.status(201).json(novoProfessor);
+            console.log(professor)
         }catch(error) {
             res.status(500).json({ message: "Erro ao criar professor" });
         }
@@ -68,4 +70,20 @@ export class ProfessorController {
             res.status(500).json({ message: "Erro ao atualizar professor" });
         }
     }
+
+    async BuscarProfessorComDisciplinasAtivas(req: Request<{cd_professor: number}>, res: Response) {
+    try {
+        const { cd_professor } = req.params;
+        const cd_professor_num = Number(cd_professor)
+        const resultado = await this.professorService.buscarProfessorComDisciplinasAtivas(cd_professor_num);
+        if (resultado) {
+            res.status(200).json(resultado);
+        } else {
+            res.status(404).json({ message: "Professor não encontrado ou sem disciplinas ativas" });
+        }
+    } catch(error) {
+        const mensagemErro = error instanceof Error ? error.message : "Erro ao buscar professor com disciplinas ativas";
+        res.status(500).json({ message: mensagemErro });
+    }
+}
 }

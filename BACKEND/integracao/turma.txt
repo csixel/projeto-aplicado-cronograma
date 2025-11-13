@@ -1,0 +1,28 @@
+para criar uma turma o backend você precisa enviar os dados dessa forma
+{
+  "ds_turma": "Turma A - 1º Ano",
+  "nr_periodos": 1
+}
+http://localhost:3000/turma/criarTurma
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para deletar uma turma o backend você precisa enviar os dados dessa forma
+http://localhost:3000/turma/deletarTurma/ <<<< aqui você deve informar o cd_turma (ID da turma) que vai ser deletada
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para buscar todas as turmas cadastradas você deve dar um get nesta rota aqui 
+http://localhost:3000/turma/buscarTodasTurmas
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para buscar uma turma cadastrada pelo ID você deve dar um get nesta rota aqui 
+http://localhost:3000/turma/buscarTurmaPorId/ <<<< aqui você deve informar o cd_turma (ID da turma)
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------
+para modificar uma turma cadastrada deverá ser utilizada essa rota aqui
+http://localhost:3000/turma/alterarTurma/ <<<< aqui deverá ser preenchido o cd_turma (ID da turma) que é o identificador único
+{
+  "ds_turma": "Turma B - 2º Ano",
+  "nr_periodos": 2
+}
+forma de envio deve conter o ds_turma e o nr_periodos
+

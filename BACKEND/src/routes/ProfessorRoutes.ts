@@ -9,6 +9,7 @@ professorRouter.delete("/deletarProfessor/:cpf", professorController.DeletarProf
 professorRouter.get("/buscarTodosProfessores", professorController.BuscarTodosProfessores.bind(professorController));
 professorRouter.get("/buscarProfessorPorId/:id_professor",professorController.BuscarProfessorPorId.bind(professorController))
 professorRouter.get("/buscarProfessorPorCPF/:cpf",professorController.BuscarProfessorPorCPF.bind(professorController))
+professorRouter.get("/buscarProfessorComDisciplinasAtivas/:cd_professor",professorController.BuscarProfessorComDisciplinasAtivas.bind(professorController))
 professorRouter.put("/alterarProfessor/:id_professor",professorController.ModificarProfessor.bind(professorController))
 
 export default professorRouter;

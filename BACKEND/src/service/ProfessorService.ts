@@ -50,4 +50,64 @@ export class ProfessorService {
         const professorAtualizado = await this.professorRepository.save(buscarProfessor);
         console.log("modificação realizada com sucesso")
         return professorAtualizado
-    }}
+    }
+
+    async buscarProfessorComDisciplinasAtivas(cd_professor: number) {
+        try {
+            // Primeiro verificar se o professor existe
+            const professor = await this.professorRepository.findOne({ 
+                where: { cd_professor } 
+            });
+            
+            if (!professor) {
+                console.log(`Professor ${cd_professor} não encontrado`);
+                return null;
+            }
+            
+            // Query para verificar horários
+            const horariosDebug = await this.professorRepository.query(`
+                SELECT 
+                    h.cd_horario,
+                    h.cd_professor,
+                    h.dt_inicio,
+                    h.dt_fim,
+                    CURDATE() as data_atual,
+                    DATE(h.dt_inicio) as dt_inicio_date,
+                    DATE(h.dt_fim) as dt_fim_date,
+                    CASE 
+                        WHEN CURDATE() >= DATE(h.dt_inicio) AND CURDATE() <= DATE(h.dt_fim) THEN 'ATIVO'
+                        ELSE 'INATIVO'
+                    END as status
+                FROM horario h
+                WHERE h.cd_professor = ?
+            `, [cd_professor]);
+            
+            console.log(`Horários encontrados para professor ${cd_professor}:`, JSON.stringify(horariosDebug, null, 2));
+            
+        
+            const resultado = await this.professorRepository.query(`
+                SELECT
+                    p.cd_professor, 
+                    p.ds_nome as nm_professor, 
+                    GROUP_CONCAT(DISTINCT d.ds_disciplina) as ds_disciplinas_professor
+                FROM 
+                    professor p
+                    INNER JOIN horario h ON (h.cd_professor = p.cd_professor)
+                    INNER JOIN disciplina d ON (d.cd_disciplina = h.cd_disciplina)
+                WHERE
+                    p.cd_professor = ? AND
+                    DATE(CURDATE()) >= DATE(h.dt_inicio) AND 
+                    DATE(CURDATE()) <= DATE(h.dt_fim)
+                GROUP BY
+                    p.cd_professor
+            `, [cd_professor]);
+            
+            console.log(`Resultado da query:`, JSON.stringify(resultado, null, 2));
+            
+            return resultado[0] || null;
+        } catch (error) {
+            console.error("Erro ao buscar professor com disciplinas ativas:", error);
+            throw error;
+        }
+    }
+}
