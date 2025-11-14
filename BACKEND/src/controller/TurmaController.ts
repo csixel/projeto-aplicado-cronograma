@@ -36,14 +36,22 @@ export class TurmaController {
         }
     }
 
-    async BuscarTurmaPorId(req: Request<{cd_turma: number}>, res: Response) {
+    async buscarTurma(req: Request, res: Response) {
         try {
-            const { cd_turma } = req.params;
-            const turma = await this.turmaService.BuscarTurmaPorId(cd_turma);
-            res.status(200).json(turma);
-        } catch(error) {
-            const mensagemErro = error instanceof Error ? error.message : "Erro ao buscar turma";
-            res.status(500).json({ message: mensagemErro });
+        const q = String(req.query.q ?? "").trim();
+
+        if (q.length == 1) {
+            return res
+            .status(400)
+            .json({ message: "Informe ao menos 1 caracteres para buscar." });
+        }
+
+        const data = await this.turmaService.buscarTurma(
+            q
+        );
+        return res.json(data);
+        } catch (error) {
+        res.status(500).json({ message: "Erro ao buscar turmas" });
         }
     }
 

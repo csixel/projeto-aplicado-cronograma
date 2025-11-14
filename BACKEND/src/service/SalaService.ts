@@ -37,7 +37,7 @@ export class SalaService {
           where: q ? { ds_sala_aula: Like (`%${q}%`) } : {}, 
           order: { ds_sala_aula: 'ASC' }
         });
-    }    
+    }
     async alterarSala(cd_sala_aula: number, dadosAtualizados: Partial<CreateSala>){
         const buscarSala = await this.salaRepository.findOne({ where: { cd_sala_aula } });
         if (!buscarSala) {

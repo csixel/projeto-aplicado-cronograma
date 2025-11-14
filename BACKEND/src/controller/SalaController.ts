@@ -38,23 +38,23 @@ export class SalaController{
     }
 
     async buscarSala(req: Request, res: Response) {
-    try {
-      const q = String(req.query.q ?? "").trim();
+      try {
+        const q = String(req.query.q ?? "").trim();
 
-      if (q.length == 1) {
-        return res
-          .status(400)
-          .json({ message: "Informe ao menos 1 caracteres para buscar." });
+        if (q.length == 1) {
+          return res
+            .status(400)
+            .json({ message: "Informe ao menos 1 caracteres para buscar." });
+        }
+
+        const data = await this.salaService.buscarSala(
+          q
+        );
+        return res.json(data);
+      } catch (error) {
+        res.status(500).json({ message: "Erro ao buscar salas" });
       }
-
-      const data = await this.salaService.buscarSala(
-        q
-      );
-      return res.json(data);
-    } catch (error) {
-      res.status(500).json({ message: "Erro ao buscar salas" });
     }
-  }
 
     async alterarSala(req: Request<{cd_sala_aula:number},unknown,Partial<CreateSala>>, res: Response) {
         try {

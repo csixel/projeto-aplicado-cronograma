@@ -9,33 +9,31 @@ let filtroAtual = '';
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_TURMAS: '../API/turmas_crud.json',
-    EXCLUIR_TURMA: 'api/turmas/excluir',
-    EDITAR_TURMA: 'api/turmas/editar',
-    INCLUIR_TURMA: 'api/turmas/incluir'
+    LISTAR_TURMAS: 'http://localhost:3000/turma/buscarTurma/',
+    EXCLUIR_TURMA: 'http://localhost:3000/turma/deletarTurma/',
+    EDITAR_TURMA: 'http://localhost:3000/turma/alterarTurma/',
+    INCLUIR_TURMA: 'http://localhost:3000/turma/criarTurma'
 };
 
-// Função para carregar turmas da API com filtro
-function carregarTurmasAPI(filtroDescricao = '', callback) {
-    const params = {};
-    
-    // Adiciona o parâmetro de filtro apenas se não estiver vazio
-    if (filtroDescricao && filtroDescricao.trim() !== '') {
-        params.ds_turma = filtroDescricao.trim();
-    }
-    
+// Função para carregar turmas da API
+function carregarTurmasAPI(filtros = '', callback) {
+
+    // Simulação de chamada à API com filtros
+    // Na implementação real, os filtros seriam enviados como parâmetros
     $.ajax({
-        url: API_URLS.LISTAR_TURMAS,
+        url: API_URLS.LISTAR_TURMAS + (filtros ? '?q=' + filtros : ''),
         method: 'GET',
         dataType: 'json',
-        data: params, // Envia os parâmetros para a API
         success: function(response) {
             callback(response);
         },
         error: function(xhr, status, error) {
-            console.error('Erro ao carregar turmas:', error);
-            mostrarMensagem('Erro ao carregar turmas da API', 'Erro');
-            callback([]);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            mostrarMensagem(mensagem, 'Erro');
+            callback({data: []});
         }
     });
 }
@@ -82,7 +80,7 @@ function carregarTabelaTurmas() {
         const tr = $('<tr>').html(`
             <td>${turma.cd_turma}</td>
             <td>${turma.ds_turma}</td>
-            <td>${turma.nr_periodo}º Período</td>
+            <td>${turma.nr_periodos}º Período</td>
             <td>
                 <button class="btn btn-sm btn-outline-primary me-1 btn-editar" data-id="${turma.cd_turma}">
                     <i class="bi bi-pencil"></i>
@@ -131,9 +129,9 @@ function validarFormulario() {
         valido = false;
     }
     
-    const nrPeriodo = $('#nr_periodo').val();
+    const nrPeriodo = $('#nr_periodos').val();
     if (nrPeriodo && (nrPeriodo < 1 || nrPeriodo > 12)) {
-        mostrarErroCampo('#nr_periodo', 'O período deve estar entre 1 e 12');
+        mostrarErroCampo('#nr_periodos', 'O período deve estar entre 1 e 12');
         valido = false;
     }
     
@@ -155,53 +153,73 @@ function editarTurma(cd_turma) {
     $('#modalTurmaLabel').text('Editar Turma');
     $('#cd_turma').val(turma.cd_turma);
     $('#ds_turma').val(turma.ds_turma);
-    $('#nr_periodo').val(turma.nr_periodo);
+    $('#nr_periodos').val(turma.nr_periodos);
 
     limparValidacoes();
     $('#modalTurma').modal('show');
 }
 
+// Função para chamar API de inclusão de turma
 function incluirTurmaAPI(dados, callback) {
+    // Simulação de chamada à API
     $.ajax({
         url: API_URLS.INCLUIR_TURMA,
         method: 'POST',
         dataType: 'json',
-        data: dados,
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Turma incluída com sucesso!');
+            callback(true, 'Turma incluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao incluir turma: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao incluir turma: ' + mensagem);
         }
     });
 }
 
+// Função para chamar API de edição de turma
 function editarTurmaAPI(cd_turma, dados, callback) {
+    // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EDITAR_TURMA,
+        url: API_URLS.EDITAR_TURMA + cd_turma,
         method: 'PUT',
         dataType: 'json',
-        data: { ...dados, cd_turma: cd_turma },
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Turma editada com sucesso!');
+            callback(true, 'Turma editada com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao editar turma: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao editar turma: ' + mensagem);
         }
     });
 }
 
+// Função para chamar API de exclusão de turma
 function excluirTurmaAPI(cd_turma, callback) {
+    // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EXCLUIR_TURMA,
+        url: API_URLS.EXCLUIR_TURMA + cd_turma,
         method: 'DELETE',
         dataType: 'json',
-        data: { cd_turma: cd_turma },
+        contentType: 'application/json',
         success: function(response) {
-            callback(response.success, response.mensagem || 'Turma excluída com sucesso!');
+            callback(true, 'Turma excluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao excluir turma: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao excluir turma: ' + mensagem);
         }
     });
 }
@@ -214,7 +232,7 @@ function salvarTurma() {
     const cd_turma = $('#cd_turma').val();
     const dados = {
         ds_turma: $('#ds_turma').val(),
-        nr_periodo: parseInt($('#nr_periodo').val())
+        nr_periodos: parseInt($('#nr_periodos').val())
     };
 
     $('#btnSalvarTurma').prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Salvando...');
@@ -253,7 +271,7 @@ function prepararExclusaoTurma(cd_turma) {
     turmaParaExcluir = cd_turma;
     $('#detalhesTurmaExclusao').html(`
         <strong>${turma.ds_turma}</strong><br>
-        ${turma.nr_periodo}º Período
+        ${turma.nr_periodos}º Período
     `);
     $('#modalConfirmacaoExclusao').modal('show');
 }

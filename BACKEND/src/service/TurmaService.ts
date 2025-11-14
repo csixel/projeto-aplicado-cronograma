@@ -1,6 +1,7 @@
 import { AppDataSource } from "../data-source/data-source";
 import { Turma } from "../entity/Turma";
 import { CreateTurma } from "../interfaces/CreateTurma";
+import { Like } from "typeorm";
 
 export class TurmaService {
     private turmaRepository = AppDataSource.getRepository(Turma);
@@ -31,12 +32,14 @@ export class TurmaService {
         return turmas;
     }
 
-    async BuscarTurmaPorId(cd_turma: number) {
-        const turma = await this.turmaRepository.findOne({ where: { cd_turma } });
-        if (!turma) {
-            throw new Error("Turma não encontrada");
-        }
-        return turma;
+    async buscarTurma(term: string) {
+        const q = (term ?? '').trim();
+        if (q.length == 1) return []; // evita varredura com 1 caractere
+    
+        return this.turmaRepository.find({
+            where: q ? { ds_turma: Like (`%${q}%`) } : {}, 
+            order: { ds_turma: 'ASC' }
+        });
     }
 
     async ModificarTurma(cd_turma: number, dadosAtualizados: Partial<CreateTurma>) {
