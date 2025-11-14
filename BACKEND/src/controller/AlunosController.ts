@@ -14,10 +14,10 @@ export class AlunoController {
       res.status(500).json({ message: "Erro ao criar aluno" });
     }
   }
-  async DeletarAluno(req: Request<{ cpf: string }>, res: Response) {
+  async DeletarAluno(req: Request<{ cd_aluno: number }>, res: Response) {
     try {
-      const { cpf } = req.params;
-      const aluno = await this.alunoService.deletarAluno(cpf);
+      const { cd_aluno } = req.params;
+      const aluno = await this.alunoService.deletarAluno(cd_aluno);
       res.status(200).json(aluno);
     } catch (error) {
       res.status(500).json({ message: "Erro ao deletar aluno" });
@@ -32,39 +32,30 @@ export class AlunoController {
     }
   }
 
-  async BuscarAlunoPeloNome(req: Request, res: Response) {
-    try {
+  async buscarAluno(req: Request, res: Response) {
+      try {
       const q = String(req.query.q ?? "").trim();
-      const page = Math.max(
-        parseInt(String(req.query.page ?? "1"), 10) || 1,
-        1
-      );
-      const pageSize = Math.min(
-        Math.max(parseInt(String(req.query.pageSize ?? "10"), 10) || 10, 1),
-        100
-      );
 
-      if (q.length < 2) {
-        return res
+      if (q.length == 1) {
+          return res
           .status(400)
-          .json({ message: "Informe ao menos 2 caracteres para buscar." });
+          .json({ message: "Informe ao menos 1 caracteres para buscar." });
       }
 
-      const data = await this.alunoService.buscarAlunoPorNome(
-        q,
-        page,
-        pageSize
+      const data = await this.alunoService.buscarAluno(
+          q
       );
-      return res.json({ data, page, pageSize, count: data.length });
-    } catch (error) {
-      res.status(500).json({ message: "Erro ao buscar aluno" });
-    }
+      return res.json(data);
+      } catch (error) {
+      res.status(500).json({ message: "Erro ao buscar alunos" });
+      }
   }
-  async modificarAluno(req: Request<{ cpf: string }, unknown, Partial<CreateAluno>>, res: Response){
+
+  async modificarAluno(req: Request<{ cd_aluno: number }, unknown, Partial<CreateAluno>>, res: Response){
     try {
-        const {cpf} = req.params
+        const {cd_aluno} = req.params
         const dadosAtualizados = req.body;
-        const novoAluno = await this.alunoService.modificarAluno(cpf, dadosAtualizados);
+        const novoAluno = await this.alunoService.modificarAluno(cd_aluno, dadosAtualizados);
         res.status(200).json(novoAluno);
     }catch(error) {
         res.status(500).json({ message: "Erro ao atualizar aluno" });

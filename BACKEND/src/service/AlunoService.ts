@@ -26,8 +26,8 @@ export class AlunoService {
     return null;
   }
 
-  async deletarAluno(cpf: string) {
-    const aluno = await this.alunoRepository.findOne({ where: { cpf: cpf } });
+  async deletarAluno(cd_aluno: number) {
+    const aluno = await this.alunoRepository.findOne({ where: { cd_aluno: cd_aluno } });
     if (!aluno) {
       throw new Error("Aluno não encontrado");
     }
@@ -40,33 +40,22 @@ export class AlunoService {
     return alunos;
   }
 
-  async buscarAlunoPorId(id_aluno: number) {
-    const aluno = await this.alunoRepository.findOne({
-      where: { cd_aluno: id_aluno },
-    });
-    if (!aluno) {
-      throw new Error("Aluno não encontrado");
-    }
-    return aluno;
-  }
-  async buscarAlunoPorNome(term: string, page = 1, pageSize = 50) {
-    const q = (term ?? "").trim();
-    if (q.length < 2) return []; // evita varredura com 1 caractere
-
-    return this.alunoRepository.find({
-      where: { ds_nome: Like(`${q}%`) },
-      order: { ds_nome: "ASC" },
-      skip: (page - 1) * pageSize,
-      take: pageSize,
-    });
+  async buscarAluno(term: string) {
+      const q = (term ?? '').trim();
+      if (q.length == 1) return []; // evita varredura com 1 caractere
+  
+      return this.alunoRepository.find({
+          where: q ? { ds_nome: Like (`%${q}%`) } : {}, 
+          order: { ds_nome: 'ASC' }
+      });
   }
 
   async modificarAluno(
-    cpf: string,
+    cd_aluno: number,
     dadosAtualizados: Partial<CreateAluno>
   ) {
     const buscarAluno = await this.alunoRepository.findOne({
-      where: { cpf: cpf},
+      where: { cd_aluno: cd_aluno},
     });
     if (!buscarAluno) {
       throw new Error("Aluno não encontrado");

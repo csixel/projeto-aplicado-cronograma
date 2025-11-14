@@ -19,7 +19,7 @@ export class Aluno {
   @Column({ type: "varchar", length: 14, unique: true })
   cpf!: string;
 
-  @Column({ type: "varchar", length: 15 })
+  @Column({ type: "varchar", length: 25 })
   ds_telefone!: string;
 
   // ALUNOS → MATRICULAS (1:N)

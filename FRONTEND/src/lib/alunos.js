@@ -6,26 +6,31 @@ let alunoParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_ALUNOS: '../API/alunos_crud.json',
-    EXCLUIR_ALUNO: 'api/alunos/excluir',
-    EDITAR_ALUNO: 'api/alunos/editar',
-    INCLUIR_ALUNO: 'api/alunos/incluir'
+    LISTAR_ALUNOS: 'http://localhost:3000/aluno/buscarAluno/',
+    EXCLUIR_ALUNO: 'http://localhost:3000/aluno/deletarAluno/',
+    EDITAR_ALUNO: 'http://localhost:3000/aluno/alterarAluno/',
+    INCLUIR_ALUNO: 'http://localhost:3000/aluno/criarAluno  '
 };
 
 // Função para carregar alunos da API
-function carregarAlunosAPI(filtros = {}, callback) {
+function carregarAlunosAPI(filtros = '', callback) {
+
+    // Simulação de chamada à API com filtros
+    // Na implementação real, os filtros seriam enviados como parâmetros
     $.ajax({
-        url: API_URLS.LISTAR_ALUNOS,
+        url: API_URLS.LISTAR_ALUNOS + (filtros ? '?q=' + filtros : ''),
         method: 'GET',
         dataType: 'json',
-        data: filtros,
         success: function(response) {
             callback(response);
         },
         error: function(xhr, status, error) {
-            console.error('Erro ao carregar alunos:', error);
-            mostrarMensagem('Erro ao carregar alunos da API', 'Erro');
-            callback([]);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            mostrarMensagem(mensagem, 'Erro');
+            callback({data: []});
         }
     });
 }
@@ -45,15 +50,13 @@ function carregarAlunosComFiltros() {
 
 // Função para obter os filtros atuais
 function obterFiltros() {
-    const filtroNome = $('#filtroNome').val().trim();
+    const filtroDescricao = $('#filtroNome').val().trim();
     
-    const filtros = {};
-    
-    if (filtroNome) {
-        filtros.ds_nome = filtroNome;
+    if (filtroDescricao) {
+        return filtroDescricao;
     }
     
-    return filtros;
+    return '';
 }
 
 // Função para carregar a tabela com os alunos
@@ -71,7 +74,7 @@ function carregarTabelaAlunos() {
             <td>${aluno.cd_aluno}</td>
             <td>
                 <strong>${aluno.ds_nome}</strong><br>
-                <small class="text-muted">CPF: ${aluno.ds_cpf}</small>
+                <small class="text-muted">CPF: ${aluno.cpf}</small>
             </td>
             <td>
                 <div><i class="bi bi-envelope me-2"></i>${aluno.ds_email}</div>
@@ -216,9 +219,9 @@ function validarFormulario() {
         valido = false;
     }
     
-    const dsCpf = $('#ds_cpf').val().replace(/\D/g, '');
+    const dsCpf = $('#cpf').val().replace(/\D/g, '');
     if (dsCpf && !validarCPF(dsCpf)) {
-        mostrarErroCampo('#ds_cpf', 'CPF inválido');
+        mostrarErroCampo('#cpf', 'CPF inválido');
         valido = false;
     }
     
@@ -244,7 +247,7 @@ function editarAluno(cd_aluno) {
     $('#ds_nome').val(aluno.ds_nome);
     $('#ds_email').val(aluno.ds_email);
     $('#ds_telefone').val(aluno.ds_telefone);
-    $('#ds_cpf').val(aluno.ds_cpf);
+    $('#cpf').val(aluno.cpf);
 
     limparValidacoes();
     $('#modalAluno').modal('show');
@@ -257,12 +260,17 @@ function incluirAlunoAPI(dados, callback) {
         url: API_URLS.INCLUIR_ALUNO,
         method: 'POST',
         dataType: 'json',
-        data: dados,
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Aluno incluído com sucesso!');
+            callback(true, 'Aluno incluído com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao incluir aluno: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao incluir aluno: ' + mensagem);
         }
     });
 }
@@ -271,15 +279,20 @@ function incluirAlunoAPI(dados, callback) {
 function editarAlunoAPI(cd_aluno, dados, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EDITAR_ALUNO,
+        url: API_URLS.EDITAR_ALUNO + cd_aluno,
         method: 'PUT',
         dataType: 'json',
-        data: { ...dados, cd_aluno: cd_aluno },
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Aluno editado com sucesso!');
+            callback(true, 'Aluno editado com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao editar aluno: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao editar aluno: ' + mensagem);
         }
     });
 }
@@ -288,15 +301,19 @@ function editarAlunoAPI(cd_aluno, dados, callback) {
 function excluirAlunoAPI(cd_aluno, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EXCLUIR_ALUNO,
+        url: API_URLS.EXCLUIR_ALUNO + cd_aluno,
         method: 'DELETE',
         dataType: 'json',
-        data: { cd_aluno: cd_aluno },
+        contentType: 'application/json',
         success: function(response) {
-            callback(response.success, response.mensagem || 'Aluno excluído com sucesso!');
+            callback(true, 'Aluno excluído com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao excluir aluno: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao excluir aluno: ' + mensagem);
         }
     });
 }
@@ -311,8 +328,9 @@ function salvarAluno() {
     const dados = {
         ds_nome: $('#ds_nome').val(),
         ds_email: $('#ds_email').val(),
-        ds_telefone: $('#ds_telefone').val().replace(/\D/g, ''),
-        ds_cpf: $('#ds_cpf').val().replace(/\D/g, '')
+        ds_telefone: $('#ds_telefone').val(),
+        cpf: $('#cpf').val(),
+        ds_senha: $('#cpf').val().replace(/\D/g, '')
     };
 
     // Mostrar loading
@@ -357,7 +375,7 @@ function prepararExclusaoAluno(cd_aluno) {
     alunoParaExcluir = cd_aluno;
     $('#detalhesAlunoExclusao').html(`
         <strong>${aluno.ds_nome}</strong><br>
-        CPF: ${aluno.ds_cpf}<br>
+        CPF: ${aluno.cpf}<br>
         E-mail: ${aluno.ds_email}
     `);
     $('#modalConfirmacaoExclusao').modal('show');
@@ -426,7 +444,7 @@ $(document).ready(function() {
     });
     
     // Formatação automática do CPF
-    $('#ds_cpf').on('input', function() {
+    $('#cpf').on('input', function() {
         const numbers = $(this).val().replace(/\D/g, '');
         if (numbers.length <= 11) {
             $(this).val(formatarCPF(numbers));
