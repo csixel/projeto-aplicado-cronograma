@@ -1,6 +1,8 @@
 import { AppDataSource } from "../data-source/data-source";
 import { Professor } from "../entity/Professor";
 import { CreateProfessor } from "../interfaces/CreateProfessor";
+import { Like } from "typeorm";
+
 export class ProfessorService {
     private professorRepository = AppDataSource.getRepository(Professor);
 
@@ -21,8 +23,8 @@ export class ProfessorService {
         return null; // cpf não existe
     }
 
-    async deletarProfessor(cpf: string) {
-        const professor = await this.professorRepository.findOne({ where: { ds_cpf: cpf } });
+    async deletarProfessor(cd_professor: number) {
+        const professor = await this.professorRepository.findOne({ where: { cd_professor: cd_professor } });
         if (!professor) {
             throw new Error("Professor não encontrado");
         }
@@ -41,8 +43,19 @@ export class ProfessorService {
         }
         return professor;
     }
-    async ModificarProfessor(id_professor: number, dadosAtualizados: Partial<CreateProfessor>){
-        const buscarProfessor = await this.professorRepository.findOne({ where: { cd_professor: id_professor} });
+
+    async buscarProfessor(term: string) {
+        const q = (term ?? '').trim();
+        if (q.length == 1) return []; // evita varredura com 1 caractere
+    
+        return this.professorRepository.find({
+            where: q ? { ds_nome: Like (`%${q}%`) } : {}, 
+            order: { ds_nome: 'ASC' }
+        });
+    }
+
+    async ModificarProfessor(cd_professor: number, dadosAtualizados: Partial<CreateProfessor>){
+        const buscarProfessor = await this.professorRepository.findOne({ where: { cd_professor: cd_professor} });
         if (!buscarProfessor) {
             throw new Error("Professor não encontrado");
         }

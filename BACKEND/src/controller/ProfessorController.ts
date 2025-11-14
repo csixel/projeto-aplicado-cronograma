@@ -16,11 +16,11 @@ export class ProfessorController {
             res.status(500).json({ message: "Erro ao criar professor" });
         }
     }
-    async DeletarProfessor(req: Request<{cpf:string}>, res: Response) {
+    async DeletarProfessor(req: Request<{cd_professor:number}>, res: Response) {
         try {
-            const {cpf } = req.params
-            console.log(typeof(cpf))
-            const professor = await this.professorService.deletarProfessor(cpf);
+            const {cd_professor } = req.params
+            console.log(typeof(cd_professor))
+            const professor = await this.professorService.deletarProfessor(cd_professor);
             res.status(200).json(professor);
         }catch(error) {
             res.status(500).json({ message: "Erro ao deletar professor" });
@@ -59,10 +59,30 @@ export class ProfessorController {
             res.status(500).json({ message: "CPF NÃO ENCONTRADO" });
         }
     }
-    async ModificarProfessor(req: Request<{id_professor:string},unknown,Partial<CreateProfessor>>, res: Response) {
+
+    async buscarProfessor(req: Request, res: Response) {
         try {
-            const {id_professor} = req.params
-            const idModificado = Number(id_professor)
+        const q = String(req.query.q ?? "").trim();
+
+        if (q.length == 1) {
+            return res
+            .status(400)
+            .json({ message: "Informe ao menos 1 caracteres para buscar." });
+        }
+
+        const data = await this.professorService.buscarProfessor(
+            q
+        );
+        return res.json(data);
+        } catch (error) {
+        res.status(500).json({ message: "Erro ao buscar professores" });
+        }
+    }
+
+    async ModificarProfessor(req: Request<{cd_professor:string},unknown,Partial<CreateProfessor>>, res: Response) {
+        try {
+            const {cd_professor} = req.params
+            const idModificado = Number(cd_professor)
             const dadosAtualizados = req.body;
             const novoProfessor = await this.professorService.ModificarProfessor(idModificado, dadosAtualizados);
             res.status(200).json(novoProfessor);

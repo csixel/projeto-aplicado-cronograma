@@ -6,26 +6,31 @@ let professorParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_PROFESSORES: '../API/professores_crud.json',
-    EXCLUIR_PROFESSOR: 'api/professores/excluir',
-    EDITAR_PROFESSOR: 'api/professores/editar',
-    INCLUIR_PROFESSOR: 'api/professores/incluir'
+    LISTAR_PROFESSORES: 'http://localhost:3000/professor/buscarProfessor/',
+    EXCLUIR_PROFESSOR: 'http://localhost:3000/professor/deletarProfessor/',
+    EDITAR_PROFESSOR: 'http://localhost:3000/professor/alterarProfessor/',
+    INCLUIR_PROFESSOR: 'http://localhost:3000/professor/criarProfessor'
 };
 
 // Função para carregar professores da API
-function carregarProfessoresAPI(filtros = {}, callback) {
+function carregarProfessoresAPI(filtros = '', callback) {
+
+    // Simulação de chamada à API com filtros
+    // Na implementação real, os filtros seriam enviados como parâmetros
     $.ajax({
-        url: API_URLS.LISTAR_PROFESSORES,
+        url: API_URLS.LISTAR_PROFESSORES + (filtros ? '?q=' + filtros : ''),
         method: 'GET',
         dataType: 'json',
-        data: filtros,
         success: function(response) {
             callback(response);
         },
         error: function(xhr, status, error) {
-            console.error('Erro ao carregar professores:', error);
-            mostrarMensagem('Erro ao carregar professores da API', 'Erro');
-            callback([]);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            mostrarMensagem(mensagem, 'Erro');
+            callback({data: []});
         }
     });
 }
@@ -45,15 +50,13 @@ function carregarProfessoresComFiltros() {
 
 // Função para obter os filtros atuais
 function obterFiltros() {
-    const filtroNome = $('#filtroNome').val().trim();
+    const filtroDescricao = $('#filtroNome').val().trim();
     
-    const filtros = {};
-    
-    if (filtroNome) {
-        filtros.ds_nome = filtroNome;
+    if (filtroDescricao) {
+        return filtroDescricao;
     }
     
-    return filtros;
+    return '';
 }
 
 // Função para carregar a tabela com os professores
@@ -265,12 +268,17 @@ function incluirProfessorAPI(dados, callback) {
         url: API_URLS.INCLUIR_PROFESSOR,
         method: 'POST',
         dataType: 'json',
-        data: dados,
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Professor incluído com sucesso!');
+            callback(true, 'Professor incluído com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao incluir professor: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao incluir professor: ' + mensagem);
         }
     });
 }
@@ -279,15 +287,20 @@ function incluirProfessorAPI(dados, callback) {
 function editarProfessorAPI(cd_professor, dados, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EDITAR_PROFESSOR,
+        url: API_URLS.EDITAR_PROFESSOR + cd_professor,
         method: 'PUT',
         dataType: 'json',
-        data: { ...dados, cd_professor: cd_professor },
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Professor editado com sucesso!');
+            callback(true, 'Professor editado com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao editar professor: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao editar professor: ' + mensagem);
         }
     });
 }
@@ -296,18 +309,23 @@ function editarProfessorAPI(cd_professor, dados, callback) {
 function excluirProfessorAPI(cd_professor, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EXCLUIR_PROFESSOR,
+        url: API_URLS.EXCLUIR_PROFESSOR + cd_professor,
         method: 'DELETE',
         dataType: 'json',
-        data: { cd_professor: cd_professor },
+        contentType: 'application/json',
         success: function(response) {
-            callback(response.success, response.mensagem || 'Professor excluído com sucesso!');
+            callback(true, 'Professor excluído com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao excluir professor: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao excluir professor: ' + mensagem);
         }
     });
 }
+
 
 // Função para salvar professor (criar ou atualizar)
 function salvarProfessor() {
@@ -319,8 +337,8 @@ function salvarProfessor() {
     const dados = {
         ds_nome: $('#ds_nome').val(),
         ds_email: $('#ds_email').val(),
-        ds_telefone: $('#ds_telefone').val().replace(/\D/g, ''),
-        ds_cpf: $('#ds_cpf').val().replace(/\D/g, ''),
+        ds_telefone: $('#ds_telefone').val(),
+        ds_cpf: $('#ds_cpf').val(),
         ds_area_atuacao: $('#ds_area_atuacao').val()
     };
 

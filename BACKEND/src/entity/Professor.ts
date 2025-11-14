@@ -14,9 +14,9 @@ export class Professor {
   ds_email!: string;
 
   @Column()
-  ds_disciplina!: string;
+  ds_area_atuacao!: string;
 
-  @Column({ type: "varchar", length: 15, unique: true })
+  @Column({ type: "varchar", length: 25 })
   ds_telefone!: string;
 
   @Column({ type: "varchar", length: 14, unique: true })
