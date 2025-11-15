@@ -10,6 +10,15 @@ export class Matricula {
   @PrimaryGeneratedColumn()
   cd_matricula!: number;
 
+  @Column({type: "int"})
+  nr_matricula!: number
+
+  @Column({type: "int"})
+  cd_aluno!: number
+
+  @Column({type: "int"})
+  cd_turma!: number
+
   @ManyToOne(() => Aluno, (aluno: Aluno) => aluno.matriculas)
   @JoinColumn({ name: "cd_aluno" })
   aluno!: Aluno;

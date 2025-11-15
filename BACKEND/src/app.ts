@@ -8,6 +8,7 @@ import alunoRouter from "./routes/AlunoRoutes";
 import salaRouter from "./routes/SalaRoutes";
 import turmaRouter from "./routes/TurmaRoutes";
 import horarioRouter from "./routes/HorarioRoutes";
+import matriculaRouter from "./routes/MatriculaRoutes";
 
 const app = express();
 app.use(cors());
@@ -19,6 +20,7 @@ app.use("/aluno",alunoRouter);
 app.use("/sala",salaRouter);
 app.use("/turma",turmaRouter);
 app.use("/horario",horarioRouter);
+app.use("/matricula",matriculaRouter);
 
 
 AppDataSource.initialize()

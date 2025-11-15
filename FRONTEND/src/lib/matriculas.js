@@ -8,12 +8,12 @@ let matriculaParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_MATRICULAS: '../API/matriculas_crud.json',
-    EXCLUIR_MATRICULA: 'api/matriculas/excluir',
-    EDITAR_MATRICULA: 'api/matriculas/editar',
-    INCLUIR_MATRICULA: 'api/matriculas/incluir',
-    LISTAR_TURMAS: '../API/turmas.json',
-    LISTAR_ALUNOS: '../API/alunos_crud.json'
+    LISTAR_MATRICULAS: 'http://localhost:3000/matricula/buscarMatricula/',
+    EXCLUIR_MATRICULA: 'http://localhost:3000/matricula/deletarMatricula/',
+    EDITAR_MATRICULA: 'http://localhost:3000/matricula/alterarMatricula/',
+    INCLUIR_MATRICULA: 'http://localhost:3000/matricula/criarMatricula',
+    LISTAR_TURMAS: 'http://localhost:3000/turma/buscarTurma/',
+    LISTAR_ALUNOS: 'http://localhost:3000/aluno/buscarAluno/'
 };
 
 // Função para carregar matrículas da API
@@ -66,7 +66,7 @@ function carregarTodosDados() {
         alunos = data;
         
         // Quando todos os dados estiverem carregados, carrega as matrículas
-        carregarMatriculasComFiltros();
+        carregarMatriculasComFiltros();        
     });
 }
 
@@ -112,10 +112,10 @@ function carregarTabelaMatriculas() {
     $.each(matriculas, function(index, matricula) {
         const tr = $('<tr>').html(`
             <td>
-                <strong>${matricula.ds_nome_aluno}</strong><br>
-                <small class="text-muted">CPF: ${matricula.ds_cpf_aluno}</small>
+                <strong>${matricula.aluno.ds_nome}</strong><br>
+                <small class="text-muted">CPF: ${matricula.aluno.cpf}</small>
             </td>
-            <td>${matricula.ds_turma}</td>
+            <td>${matricula.turma.ds_turma}</td>
             <td>${matricula.nr_matricula}</td>
             <td>
                 <button class="btn btn-sm btn-outline-primary me-1 btn-editar" data-id="${matricula.cd_matricula}">
@@ -176,7 +176,7 @@ function validarCPF(cpf) {
 function buscarAlunoPorCPF(cpf) {
     const cpfNumeros = cpf.replace(/\D/g, '');
     return $.grep(alunos, function(aluno) { 
-        return aluno.ds_cpf.replace(/\D/g, '') === cpfNumeros; 
+        return aluno.cpf.replace(/\D/g, '') === cpfNumeros; 
     })[0];
 }
 
@@ -228,9 +228,9 @@ function validarFormulario() {
     });
     
     // Validações customizadas
-    const dsCpfAluno = $('#ds_cpf_aluno').val().replace(/\D/g, '');
+    const dsCpfAluno = $('#cpf').val().replace(/\D/g, '');
     if (dsCpfAluno && !validarCPF(dsCpfAluno)) {
-        mostrarErroCampo('#ds_cpf_aluno', 'CPF inválido');
+        mostrarErroCampo('#cpf', 'CPF inválido');
         valido = false;
     }
     
@@ -238,7 +238,7 @@ function validarFormulario() {
     if (dsCpfAluno && validarCPF(dsCpfAluno)) {
         const aluno = buscarAlunoPorCPF(dsCpfAluno);
         if (!aluno) {
-            mostrarErroCampo('#ds_cpf_aluno', 'Aluno não encontrado com este CPF');
+            mostrarErroCampo('#cpf', 'Aluno não encontrado com este CPF');
             valido = false;
         }
     }
@@ -269,12 +269,12 @@ function editarMatricula(cd_matricula) {
 
     $('#modalMatriculaLabel').text('Editar Matrícula');
     $('#cd_matricula').val(matricula.cd_matricula);
-    $('#ds_cpf_aluno').val(matricula.ds_cpf_aluno);
-    $('#cd_turma').val(matricula.cd_turma);
+    $('#cpf').val(matricula.aluno.cpf);
+    $('#cd_turma').val(matricula.turma.cd_turma);
     $('#nr_matricula').val(matricula.nr_matricula);
     
     // Mostra informações do aluno
-    const aluno = buscarAlunoPorCPF(matricula.ds_cpf_aluno);
+    const aluno = buscarAlunoPorCPF(matricula.aluno.cpf);
     if (aluno) {
         $('#infoAluno').html(`<span class="text-success"><i class="bi bi-check-circle me-1"></i>Aluno encontrado: ${aluno.ds_nome}</span>`);
     }
@@ -283,53 +283,67 @@ function editarMatricula(cd_matricula) {
     $('#modalMatricula').modal('show');
 }
 
-// Função para chamar API de inclusão de matrícula
+// Função para chamar API de inclusão de matricula
 function incluirMatriculaAPI(dados, callback) {
     // Simulação de chamada à API
     $.ajax({
         url: API_URLS.INCLUIR_MATRICULA,
         method: 'POST',
         dataType: 'json',
-        data: dados,
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Matrícula incluída com sucesso!');
+            callback(true, 'Matricula incluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao incluir matrícula: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao incluir matricula: ' + mensagem);
         }
     });
 }
 
-// Função para chamar API de edição de matrícula
+// Função para chamar API de edição de matricula
 function editarMatriculaAPI(cd_matricula, dados, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EDITAR_MATRICULA,
+        url: API_URLS.EDITAR_MATRICULA + cd_matricula,
         method: 'PUT',
         dataType: 'json',
-        data: { ...dados, cd_matricula: cd_matricula },
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Matrícula editada com sucesso!');
+            callback(true, 'Matricula editada com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao editar matrícula: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao editar matricula: ' + mensagem);
         }
     });
 }
 
-// Função para chamar API de exclusão de matrícula
+// Função para chamar API de exclusão de matricula
 function excluirMatriculaAPI(cd_matricula, callback) {
     // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EXCLUIR_MATRICULA,
+        url: API_URLS.EXCLUIR_MATRICULA + cd_matricula,
         method: 'DELETE',
         dataType: 'json',
-        data: { cd_matricula: cd_matricula },
+        contentType: 'application/json',
         success: function(response) {
-            callback(response.success, response.mensagem || 'Matrícula excluída com sucesso!');
+            callback(true, 'Matricula excluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao excluir matrícula: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao excluir matricula: ' + mensagem);
         }
     });
 }
@@ -340,9 +354,11 @@ function salvarMatricula() {
         return;
     }
 
+    const aluno = buscarAlunoPorCPF($('#cpf').val().replace(/\D/g, ''))
+
     const cd_matricula = $('#cd_matricula').val();
     const dados = {
-        ds_cpf_aluno: $('#ds_cpf_aluno').val().replace(/\D/g, ''),
+        cd_aluno: aluno.cd_aluno,
         cd_turma: parseInt($('#cd_turma').val()),
         nr_matricula: parseInt($('#nr_matricula').val())
     };
@@ -450,7 +466,7 @@ $(document).ready(function() {
     });
     
     // Formatação automática do CPF
-    $('#ds_cpf_aluno').on('input', function() {
+    $('#cpf').on('input', function() {
         const numbers = $(this).val().replace(/\D/g, '');
         if (numbers.length <= 11) {
             $(this).val(formatarCPF(numbers));
