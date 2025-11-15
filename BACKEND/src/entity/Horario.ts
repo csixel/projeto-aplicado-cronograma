@@ -13,7 +13,10 @@ export class Horario {
   @Column({ type: "varchar", length: 50 })
   ds_horario!: string;
 
-   @ManyToOne(() => Turma, (turma: Turma) => turma.horarios)
+  @Column({ type: "int" })
+  nr_dia_semana!: number;
+
+  @ManyToOne(() => Turma, (turma: Turma) => turma.horarios)
   @JoinColumn({ name: "cd_turma" })
   turma!: Turma;
 
@@ -36,8 +39,14 @@ export class Horario {
   disciplina!: Disciplina;
 
   @Column({ type: "date" })
-  dt_inicio!: Date;
+  dt_inicio!: string;
 
   @Column({ type: "date" })
-  dt_fim!: Date;
+  dt_fim!: string;
+
+  @Column({ type: "time" })
+  hr_inicio!: string;
+
+  @Column({ type: "time" })
+  hr_fim!: string;
 }

@@ -4,7 +4,10 @@ export interface CreateHorario {
     cd_sala_aula: number;
     cd_professor: number;
     cd_disciplina: number;
-    dt_inicio: Date;
-    dt_fim: Date;
+    nr_dia_semana: number;
+    dt_inicio: string;
+    dt_fim: string;
+    hr_inicio: string;
+    hr_fim: string;
 }
 

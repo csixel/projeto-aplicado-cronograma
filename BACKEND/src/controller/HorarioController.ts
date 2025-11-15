@@ -47,6 +47,28 @@ export class HorarioController {
         }
     }
 
+    async buscarHorario(req: Request, res: Response) {
+      try {
+        const cd_disciplina = Number(req.query.cd_disciplina ?? 0);
+        const cd_professor = Number(req.query.cd_professor ?? 0);
+        const cd_sala_aula = Number(req.query.cd_sala_aula ?? 0);
+        const cd_turma = Number(req.query.cd_turma ?? 0);
+
+        const data = await this.horarioService.buscarHorario(
+            cd_disciplina,
+            cd_professor,
+            cd_sala_aula,
+            cd_turma
+        );
+
+        return res.json(data);
+
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erro ao buscar horario" });
+      }
+    }
+
     async ModificarHorario(req: Request<{cd_horario: string}, unknown, Partial<CreateHorario>>, res: Response) {
         try {
             const { cd_horario } = req.params;

@@ -8,6 +8,7 @@ horarioRouter.post("/criarHorario", horarioController.CriarHorario.bind(horarioC
 horarioRouter.delete("/deletarHorario/:cd_horario", horarioController.DeletarHorario.bind(horarioController));
 horarioRouter.get("/buscarTodosHorarios", horarioController.BuscarTodosHorarios.bind(horarioController));
 horarioRouter.get("/buscarHorarioPorId/:cd_horario", horarioController.BuscarHorarioPorId.bind(horarioController));
+horarioRouter.get("/buscarHorario", horarioController.buscarHorario.bind(horarioController));
 horarioRouter.put("/alterarHorario/:cd_horario", horarioController.ModificarHorario.bind(horarioController));
 
 export default horarioRouter;

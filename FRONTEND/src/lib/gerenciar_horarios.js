@@ -4,17 +4,29 @@ let professores = [];
 let salas = [];
 let turmas = [];
 let horarios = [];
+let diasSemana = {
+    1: 'Segunda-feira',
+    2: 'Terça-feira',
+    3: 'Quarta-feira',
+    4: 'Quinta-feira',
+    5: 'Sexta-feira'
+};
 
 // Variável para armazenar o horário que será excluído
 let horarioParaExcluir = null;
 
 // URLs das APIs fictícias
 const API_URLS = {
-    LISTAR_HORARIOS: '../API/lista_horarios.json',
-    EXCLUIR_HORARIO: 'api/horarios/excluir',
-    EDITAR_HORARIO: 'api/horarios/editar',
-    INCLUIR_HORARIO: 'api/horarios/incluir'
+    LISTAR_HORARIOS: 'http://localhost:3000/horario/buscarHorario/',
+    EXCLUIR_HORARIO: 'http://localhost:3000/horario/deletarHorario/',
+    EDITAR_HORARIO: 'http://localhost:3000/horario/alterarHorario/',
+    INCLUIR_HORARIO: 'http://localhost:3000/horario/criarHorario',
+    LISTAR_DISCIPLINA: 'http://localhost:3000/disciplina/buscarDisciplina/',
+    LISTAR_PROFESSOR: 'http://localhost:3000/professor/buscarProfessor/',
+    LISTAR_SALA: 'http://localhost:3000/sala/buscarSala/',
+    LISTAR_TURMA: 'http://localhost:3000/turma/buscarTurma/'
 };
+
 
 // Função para carregar horários da API com filtros
 function carregarHorariosAPI(filtros = {}, callback) {
@@ -69,30 +81,30 @@ function carregarDadosAPI(url, callback) {
 // Função para carregar todos os dados das APIs
 function carregarTodosDados() {
     $('#loading-spinner').show();
-    
+
     // Carrega disciplinas
-    carregarDadosAPI('../API/disciplinas.json', function(data) {
+    carregarDadosAPI(API_URLS.LISTAR_DISCIPLINA, function(data) {
         disciplinas = data;
         preencherSelect('#filtroDisciplina', data, 'cd_disciplina', 'ds_disciplina');
         preencherSelect('#cd_disciplina', data, 'cd_disciplina', 'ds_disciplina');
     });
     
     // Carrega professores
-    carregarDadosAPI('../API/professores.json', function(data) {
+    carregarDadosAPI(API_URLS.LISTAR_PROFESSOR, function(data) {
         professores = data;
         preencherSelect('#filtroProfessor', data, 'cd_professor', 'ds_nome');
         preencherSelect('#cd_professor', data, 'cd_professor', 'ds_nome');
     });
     
     // Carrega salas
-    carregarDadosAPI('../API/salas.json', function(data) {
+    carregarDadosAPI(API_URLS.LISTAR_SALA, function(data) {
         salas = data;
         preencherSelect('#filtroSala', data, 'cd_sala_aula', 'ds_sala_aula');
         preencherSelect('#cd_sala_aula', data, 'cd_sala_aula', 'ds_sala_aula');
     });
     
     // Carrega turmas
-    carregarDadosAPI('../API/turmas.json', function(data) {
+    carregarDadosAPI(API_URLS.LISTAR_TURMA, function(data) {
         turmas = data;
         preencherSelect('#filtroTurma', data, 'cd_turma', 'ds_turma');
         preencherSelect('#cd_turma', data, 'cd_turma', 'ds_turma');
@@ -148,13 +160,13 @@ function carregarTabelaHorarios() {
         const tr = $('<tr>').html(`
             <td>${horario.cd_horario}</td>
             <td>${horario.ds_horario}</td>
-            <td>${horario.ds_disciplina}</td>
-            <td><span class="badge badge-dia">${horario.ds_dia_semana}</span></td>
+            <td>${horario.disciplina.ds_disciplina}</td>
+            <td><span class="badge badge-dia">${diasSemana[horario.nr_dia_semana]}</span></td>
             <td>${formatarData(horario.dt_inicio)} a ${formatarData(horario.dt_fim)}</td>
             <td>${horario.hr_inicio} - ${horario.hr_fim}</td>
-            <td>${horario.ds_professor}</td>
-            <td>${horario.ds_sala_aula}</td>
-            <td>${horario.ds_turma}</td>
+            <td>${horario.professor.ds_nome}</td>
+            <td>${horario.sala.ds_sala_aula}</td>
+            <td>${horario.turma.ds_turma}</td>
             <td>
                 <button class="btn btn-sm btn-outline-primary me-1 btn-editar" data-id="${horario.cd_horario}">
                     <i class="bi bi-pencil"></i>
@@ -278,10 +290,10 @@ function editarHorario(cd_horario) {
     $('#modalHorarioLabel').text('Editar Horário');
     $('#cd_horario').val(horario.cd_horario);
     $('#ds_horario').val(horario.ds_horario);
-    $('#cd_turma').val(horario.cd_turma);
-    $('#cd_sala_aula').val(horario.cd_sala_aula);
-    $('#cd_professor').val(horario.cd_professor);
-    $('#cd_disciplina').val(horario.cd_disciplina);
+    $('#cd_turma').val(horario.turma.cd_turma);
+    $('#cd_sala_aula').val(horario.sala.cd_sala_aula);
+    $('#cd_professor').val(horario.professor.cd_professor);
+    $('#cd_disciplina').val(horario.disciplina.cd_disciplina);
     $('#nr_dia_semana').val(horario.nr_dia_semana);
     $('#dt_inicio').val(horario.dt_inicio);
     $('#dt_fim').val(horario.dt_fim);
@@ -292,47 +304,67 @@ function editarHorario(cd_horario) {
     $('#modalHorario').modal('show');
 }
 
+// Função para chamar API de inclusão de horario
 function incluirHorarioAPI(dados, callback) {
+    // Simulação de chamada à API
     $.ajax({
         url: API_URLS.INCLUIR_HORARIO,
         method: 'POST',
         dataType: 'json',
-        data: dados,
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Horário incluído com sucesso!');
+            callback(true, 'Horário incluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao incluir horário: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao incluir horario: ' + mensagem);
         }
     });
 }
 
+// Função para chamar API de edição de horario
 function editarHorarioAPI(cd_horario, dados, callback) {
+    // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EDITAR_HORARIO,
+        url: API_URLS.EDITAR_HORARIO + cd_horario,
         method: 'PUT',
         dataType: 'json',
-        data: { ...dados, cd_horario: cd_horario },
+        contentType: 'application/json',
+        data: JSON.stringify(dados),
         success: function(response) {
-            callback(response.success, response.mensagem || 'Horário editada com sucesso!');
+            callback(true, 'Horario editada com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao editar horário: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao editar horario: ' + mensagem);
         }
     });
 }
 
+// Função para chamar API de exclusão de horario
 function excluirHorarioAPI(cd_horario, callback) {
+    // Simulação de chamada à API
     $.ajax({
-        url: API_URLS.EXCLUIR_HORARIO,
+        url: API_URLS.EXCLUIR_HORARIO + cd_horario,
         method: 'DELETE',
         dataType: 'json',
-        data: { cd_horario: cd_horario },
+        contentType: 'application/json',
         success: function(response) {
-            callback(response.success, response.mensagem || 'Horário excluída com sucesso!');
+            callback(true, 'Horário excluída com sucesso!');
         },
         error: function(xhr, status, error) {
-            callback(false, 'Erro ao excluir horário: ' + error);
+            let mensagem = error;
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                mensagem = xhr.responseJSON.message;
+            }
+            callback(false, 'Erro ao excluir horário: ' + mensagem);
         }
     });
 }
@@ -392,7 +424,7 @@ function prepararExclusaoHorario(cd_horario) {
     horarioParaExcluir = cd_horario;
     $('#detalhesHorarioExclusao').html(`
         <strong>${horario.ds_horario}</strong><br>
-        ${horario.ds_disciplina} - ${horario.ds_dia_semana}<br>
+        ${horario.disciplina.ds_disciplina} - ${diasSemana[horario.nr_dia_semana]}<br>
         ${horario.hr_inicio} - ${horario.hr_fim}
     `);
     $('#modalConfirmacaoExclusao').modal('show');
