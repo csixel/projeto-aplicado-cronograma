@@ -176,5 +176,86 @@ export class HorarioService {
         console.log("modificação realizada com sucesso");
         return horarioAtualizado;
     }
+
+    async buscarHorariosCompletos() {
+        // garante que as relações foram carregadas corretamente
+        const horarios = await this.horarioRepository
+            .createQueryBuilder("horario")
+            .leftJoinAndSelect("horario.disciplina", "disciplina")
+            .leftJoinAndSelect("horario.professor", "professor")
+            .leftJoinAndSelect("horario.sala", "sala")
+            .leftJoinAndSelect("horario.turma", "turma")
+            .getMany();
+
+        console.log(`Total de horários encontrados: ${horarios.length}`);
+
+        const horariosFormatados = horarios.map(horario => {
+            const horarioFormatado = {
+                cd_horario: horario.cd_horario,
+                cd_professor: horario.professor?.cd_professor,
+                ds_professor: horario.professor?.ds_nome,
+                cd_disciplina: horario.disciplina?.cd_disciplina,
+                ds_disciplina: horario.disciplina?.ds_disciplina,
+                cd_turma: horario.turma?.cd_turma,
+                ds_turma: horario.turma?.ds_turma,
+                cd_sala_aula: horario.sala?.cd_sala_aula,
+                ds_sala_aula: horario.sala?.ds_sala_aula,
+                ds_horario: horario.ds_horario,
+                nr_dia_semana: horario.nr_dia_semana,
+                dt_inicio: horario.dt_inicio,
+                dt_fim: horario.dt_fim,
+                hr_inicio: horario.hr_inicio,
+                hr_fim: horario.hr_fim
+            };
+
+            // Debug: log para verificar se os dados estão sendo carregados
+            if (!horarioFormatado.ds_disciplina) {
+                console.warn(`Horário ${horario.cd_horario} sem disciplina:`, {
+                    disciplina: horario.disciplina,
+                    cd_disciplina: horario.disciplina?.cd_disciplina,
+                    disciplinaObject: JSON.stringify(horario.disciplina)
+                });
+            }
+
+            return horarioFormatado;
+        });
+
+        console.log(`Horários formatados: ${horariosFormatados.length}`);
+        return horariosFormatados;
+    }
+
+    async buscarHorarioCompletoPorId(cd_horario: number) {
+        
+        const horario = await this.horarioRepository
+            .createQueryBuilder("horario")
+            .leftJoinAndSelect("horario.disciplina", "disciplina")
+            .leftJoinAndSelect("horario.professor", "professor")
+            .leftJoinAndSelect("horario.sala", "sala")
+            .leftJoinAndSelect("horario.turma", "turma")
+            .where("horario.cd_horario = :cd_horario", { cd_horario })
+            .getOne();
+
+        if (!horario) {
+            throw new Error("Horário não encontrado");
+        }
+
+        return {
+            cd_horario: horario.cd_horario,
+            cd_professor: horario.professor?.cd_professor,
+            ds_professor: horario.professor?.ds_nome,
+            cd_disciplina: horario.disciplina?.cd_disciplina,
+            ds_disciplina: horario.disciplina?.ds_disciplina,
+            cd_turma: horario.turma?.cd_turma,
+            ds_turma: horario.turma?.ds_turma,
+            cd_sala_aula: horario.sala?.cd_sala_aula,
+            ds_sala_aula: horario.sala?.ds_sala_aula,
+            ds_horario: horario.ds_horario,
+            nr_dia_semana: horario.nr_dia_semana,
+            dt_inicio: horario.dt_inicio,
+            dt_fim: horario.dt_fim,
+            hr_inicio: horario.hr_inicio,
+            hr_fim: horario.hr_fim
+        };
+    }
 }
 

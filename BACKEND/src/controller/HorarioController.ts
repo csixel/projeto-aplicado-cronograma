@@ -81,5 +81,26 @@ export class HorarioController {
             res.status(500).json({ message: mensagemErro });
         }
     }
+
+    async BuscarHorariosCompletos(req: Request, res: Response) {
+        try {
+            const horarios = await this.horarioService.buscarHorariosCompletos();
+            res.status(200).json(horarios);
+        } catch(error) {
+            const mensagemErro = error instanceof Error ? error.message : "Erro ao buscar horários completos";
+            res.status(500).json({ message: mensagemErro });
+        }
+    }
+
+    async BuscarHorarioCompletoPorId(req: Request<{cd_horario: number}>, res: Response) {
+        try {
+            const { cd_horario } = req.params;
+            const horario = await this.horarioService.buscarHorarioCompletoPorId(cd_horario);
+            res.status(200).json(horario);
+        } catch(error) {
+            const mensagemErro = error instanceof Error ? error.message : "Erro ao buscar horário completo";
+            res.status(500).json({ message: mensagemErro });
+        }
+    }
 }
 
