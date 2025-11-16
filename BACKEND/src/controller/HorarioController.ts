@@ -84,7 +84,9 @@ export class HorarioController {
 
     async BuscarHorariosCompletos(req: Request, res: Response) {
         try {
-            const horarios = await this.horarioService.buscarHorariosCompletos();
+            const cd_turma = Number(req.query.cd_turma ?? 0);
+
+            const horarios = await this.horarioService.buscarHorariosCompletos(cd_turma);
             res.status(200).json(horarios);
         } catch(error) {
             const mensagemErro = error instanceof Error ? error.message : "Erro ao buscar horários completos";

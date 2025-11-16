@@ -24,11 +24,18 @@ function carregarHorarios() {
     
     // Endpoint da API que retorna dados completos
     const apiUrl = "http://localhost:3000/horario/buscarHorariosCompletos";
+
+    // Remove filtros vazios antes de enviar para a API
+    const params = {};
+
+    // Filtra pela turma selecionada
+    params.cd_turma = 1;
     
     $.ajax({
         url: apiUrl,
         method: 'GET',
         dataType: 'json',
+        data: params, // Envia os parâmetros de filtro para a API
         success: function(response) {
             $('#loading-spinner').hide();
             $('#calendar').show();

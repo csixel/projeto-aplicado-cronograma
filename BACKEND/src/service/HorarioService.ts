@@ -177,15 +177,20 @@ export class HorarioService {
         return horarioAtualizado;
     }
 
-    async buscarHorariosCompletos() {
-        // garante que as relações foram carregadas corretamente
-        const horarios = await this.horarioRepository
+    async buscarHorariosCompletos(cd_turma: number) {
+        const turma = Number(cd_turma);
+
+        const query = await this.horarioRepository
             .createQueryBuilder("horario")
             .leftJoinAndSelect("horario.disciplina", "disciplina")
             .leftJoinAndSelect("horario.professor", "professor")
             .leftJoinAndSelect("horario.sala", "sala")
-            .leftJoinAndSelect("horario.turma", "turma")
-            .getMany();
+            .leftJoinAndSelect("horario.turma", "turma");
+
+        if (turma) {
+            query.andWhere("turma.cd_turma = :cd_turma", { cd_turma: turma });
+        }
+        const horarios = await query.getMany();
 
         console.log(`Total de horários encontrados: ${horarios.length}`);
 
