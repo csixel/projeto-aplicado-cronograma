@@ -51,6 +51,20 @@ export class AlunoController {
       }
   }
 
+  async buscarAlunoPorCPF(req: Request, res: Response) {
+      try {
+        const cpf = req.query.cpf ?? '';
+
+        const data = await this.alunoService.buscarAlunoPorCPF(String(cpf));
+
+        return res.json(data);
+
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Erro ao buscar aluno por cpf" });
+      }
+  }
+
   async modificarAluno(req: Request<{ cd_aluno: number }, unknown, Partial<CreateAluno>>, res: Response){
     try {
         const {cd_aluno} = req.params

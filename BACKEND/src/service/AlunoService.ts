@@ -19,11 +19,15 @@ export class AlunoService {
   }
 
   async buscarAlunoPorCPF(cpf: string) {
-    const aluno = await this.alunoRepository.findOne({ where: { cpf: cpf } });
-    if (aluno) {
-      return aluno;
+    const query = this.alunoRepository
+        .createQueryBuilder("aluno")
+        .leftJoinAndSelect("aluno.matriculas", "matriculas")
+        .leftJoinAndSelect("matriculas.turma", "turma")
+    if (cpf != '') {
+        query.andWhere("aluno.cpf = :cpf", { cpf: cpf });
     }
-    return null;
+    const alunos = await query.getMany();
+    return alunos;
   }
 
   async deletarAluno(cd_aluno: number) {
