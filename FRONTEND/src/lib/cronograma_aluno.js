@@ -195,8 +195,6 @@ function inicializarCalendario(arrHorarios) {
 
 // Carrega os horários quando a página é carregada
 $(document).ready(function() {
-    //carregarHorarios();
-
     // Abre modal ao carregar a página
     let modalCpf = new bootstrap.Modal(document.getElementById("modalCPF"));
     modalCpf.show();

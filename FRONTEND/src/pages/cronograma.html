@@ -14,7 +14,7 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js'></script>
     <!-- jQuery (para facilitar as chamadas AJAX) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
+
     <link rel="stylesheet" href="../styles/styleCronograma.css">
 </head>
 <body>
@@ -66,7 +66,7 @@
                             Disciplinas
                         </a>
                         <a class="nav-link" href="turmas.html">
-                            <i class="bi bi-megaphone"></i>
+                            <i class="bi bi-people-fill"></i>
                             Turmas
                         </a>
                         <a class="nav-link" href="professores.html">
@@ -133,6 +133,30 @@
 
             <!-- Main Content -->
             <main class="col-lg-10 col-12 px-md-4 mt-3">
+                <!-- Filtros -->
+                <div class="filtros-container card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-6">
+                                <label for="filtroTurma" class="form-label">Turma</label>
+                                <select class="form-select" id="filtroTurma">
+                                    <option value="">Todas as turmas</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-primary" id="btnFiltrar">
+                                <i class="bi bi-search me-1"></i> Filtrar
+                            </button>
+                            <button class="btn btn-outline-secondary" id="btnLimparFiltros">
+                                <i class="bi bi-x-circle me-1"></i> Limpar Filtros
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="nenhuma-turma-filtrada" class="alert alert-primary">Necessário filtrar uma turma para visualizar o cronograma</div>
+
                 <div id="loading-spinner" class="loading-spinner">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Carregando...</span>
@@ -143,6 +167,7 @@
             </main>
         </div>
     </div>
+
     <script src="../lib/cronograma.js"></script>
 </body>
 </html>
