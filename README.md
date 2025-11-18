@@ -36,9 +36,7 @@ Após o backend estar rodando, abra qualquer página do frontend no seu navegado
 projeto-aplicado-cronograma/
 
 ├── cadastroProf/
-
 │   ├── BACKEND/          # Servidor Node.js/Express
-
 │   └── FRONTEND/         # Interface web (HTML, CSS, JS)
 
 ## **Funcionalidades**
