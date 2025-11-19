@@ -36,9 +36,9 @@ Após o backend estar rodando, abra qualquer página do frontend no seu navegado
 projeto-aplicado-cronograma/
 
 ├── cadastroProf/
-|   |
+
 │   ├── BACKEND/          # Servidor Node.js/Express
-|   |
+
 │   └── FRONTEND/         # Interface web (HTML, CSS, JS)
 
 ## **Funcionalidades**
@@ -56,8 +56,8 @@ O projeto estará disponível localmente após a execução dos passos acima. Ac
 - O backend deve estar em execução para que as funcionalidades do frontend funcionem corretamente
 - Em caso de problemas de conexão com o banco, verifique as credenciais no código do backend
 
-## **Vídeo demonstrativo:
-**
+## Vídeo demonstrativo:
+
 - youtube
 https://www.youtube.com/watch?v=c9W1C08ZyUc
 - Google Drive
