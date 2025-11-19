@@ -46,11 +46,34 @@ export class ProfessorService {
 
     async buscarProfessor(term: string) {
         const q = (term ?? '').trim();
-        if (q.length == 1) return []; // evita varredura com 1 caractere
-    
-        return this.professorRepository.find({
-            where: q ? { ds_nome: Like (`%${q}%`) } : {}, 
-            order: { ds_nome: 'ASC' }
+        if (q.length == 1) return [];
+
+        const query = this.professorRepository
+            .createQueryBuilder("professor")
+            .leftJoinAndSelect("professor.horarios", "horarios")
+            .leftJoinAndSelect("horarios.disciplina", "disciplina");
+
+        if (q.length > 1) {
+            query.andWhere("professor.ds_nome LIKE :nome", { nome: `%${q}%` });
+        }
+
+        const professores = await query.getMany();
+        
+        // Processa o resultado para extrair apenas os nomes das disciplinas
+        return professores.map(professor => {
+            const disciplinasNomes = professor.horarios
+                ?.map(horario => horario.disciplina?.ds_disciplina)
+                .filter((nome, index, array) => 
+                    nome && array.indexOf(nome) === index
+                ) || [];
+
+            const { horarios, ...professorSemHorarios } = professor;
+            
+            return {
+                ...professorSemHorarios,
+                disciplinas: disciplinasNomes,
+                totalHorarios: horarios?.length || 0
+            };
         });
     }
 
