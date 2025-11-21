@@ -404,8 +404,8 @@ function prepararExclusaoMatricula(cd_matricula) {
 
     matriculaParaExcluir = cd_matricula;
     $('#detalhesMatriculaExclusao').html(`
-        <strong>${matricula.ds_nome_aluno}</strong><br>
-        Turma: ${matricula.ds_turma}<br>
+        <strong>${matricula.aluno.ds_nome}</strong><br>
+        Turma: ${matricula.turma.ds_turma}<br>
         Matrícula: ${matricula.nr_matricula}
     `);
     $('#modalConfirmacaoExclusao').modal('show');
