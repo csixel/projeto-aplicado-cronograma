@@ -36,7 +36,9 @@ Após o backend estar rodando, abra qualquer página do frontend no seu navegado
 projeto-aplicado-cronograma/
 
 ├── cadastroProf/
+
 │   ├── BACKEND/          # Servidor Node.js/Express
+
 │   └── FRONTEND/         # Interface web (HTML, CSS, JS)
 
 ## **Funcionalidades**
@@ -47,9 +49,16 @@ projeto-aplicado-cronograma/
 - Interface administrativa e para alunos
 
 ## **Acesso**
-O projeto estará disponível localmente após a execução dos passos acima. Acesse as páginas HTML diretamente pelo navegador.
+O projeto estará disponível localmente após a execução dos passos acima. Acesse as páginas HTML diretamente pelo navegador, podendo usar o plugin Live server do VScode.
 
 ## Observações
 -  Certifique-se de que o MySQL está rodando antes de executar o backend
 - O backend deve estar em execução para que as funcionalidades do frontend funcionem corretamente
 - Em caso de problemas de conexão com o banco, verifique as credenciais no código do backend
+
+## Vídeo demonstrativo:
+
+- youtube
+https://www.youtube.com/watch?v=c9W1C08ZyUc
+- Google Drive
+https://drive.google.com/file/d/1zG1IqxC88XrBHeEKtKGcuLdOuTL6uH9g/view?usp=sharing
