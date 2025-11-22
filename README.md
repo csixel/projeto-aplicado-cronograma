@@ -58,7 +58,13 @@ O projeto estará disponível localmente após a execução dos passos acima. Ac
 
 ## Vídeo demonstrativo:
 
-- youtube
-https://www.youtube.com/watch?v=c9W1C08ZyUc
-- Google Drive
-https://drive.google.com/file/d/1zG1IqxC88XrBHeEKtKGcuLdOuTL6uH9g/view?usp=sharing
+Demonstração do sistema com comentários
+- https://drive.google.com/file/d/1zG1IqxC88XrBHeEKtKGcuLdOuTL6uH9g/view?usp=sharing
+
+Overview demonstrando conexão com o banco de dados (sem comentários)
+- https://drive.google.com/file/d/1IExbqlQJBwM02Lnk7fok8FTMgMU1bgW8/view?usp=sharing
+
+Page aluno (sem comentários)
+- https://drive.google.com/file/d/1APGgxqoAf4Ni2qHcUGjjzI0o7_Uf1CW_/view?usp=sharing
+
+
